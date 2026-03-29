@@ -28,6 +28,9 @@
     "prettier": "^3.5",
     "typescript": "^5.8"
   },
+  "overrides": {
+    "react-i18next": "^15.6.1"
+  },
   "prettier": {
     "bracketSpacing": false,
     "printWidth": 100,
