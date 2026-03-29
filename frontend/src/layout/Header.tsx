@@ -19,7 +19,10 @@ export function Header() {
       <nav className="text-gray-700">
         <ul className="flex justify-center gap-x-8">
           {pages.map((page) => (
-            <NavItem key={page._id} to={`/${page.slug?.current || ''}`}>
+            <NavItem
+              key={page._id}
+              to={page.slug?.current && page.slug.current !== '/' ? `/${page.slug.current}` : '/'}
+            >
               {i18n.language === 'FR' ? page.title.fr_FR : page.title.en_GB}
             </NavItem>
           ))}

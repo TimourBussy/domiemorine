@@ -1,49 +1,54 @@
-import { Header } from "./layout/Header";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { usePages } from "./hooks/usePages";
-import Home from "./pages/Home";
-import Biography from "./pages/Biography";
-import Ensembles from "./pages/Ensembles";
-import Schedule from "./pages/Schedule";
-import Gallery from "./pages/Gallery";
-import Contact from "./pages/Contact";
-
-const pageComponentMap: Record<string, React.ComponentType> = {
-  home: Home,
-  biography: Biography,
-  ensembles: Ensembles,
-  schedule: Schedule,
-  gallery: Gallery,
-  contact: Contact,
-};
+import {Header} from './layout/Header'
+import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import {usePages} from './hooks/usePages'
+import {Suspense, lazy, type ComponentType} from 'react'
+import Home from './pages/Home'
+import Template from './pages/Template'
+import CircularProgress from '@mui/material/CircularProgress'
 
 export default function App() {
-  const pages = usePages();
-  const homePage = pages.find(
-    (page) => !page.slug?.current || page.slug.current === ""
-  );
+  const pages = usePages()
 
   return (
     <BrowserRouter>
       <Header />
       <Routes>
-        {homePage && (
-          <Route path="/" element={<Home />} />
-        )}
-        {pages
-          .filter((page) => page.slug?.current && page.slug.current !== "")
-          .map((page) => {
-            const slug = page.slug.current.toLowerCase();
-            const Component = pageComponentMap[slug] || (() => <div>{page.title.en_GB || page.title.fr_FR}</div>);
-            return (
-              <Route
-                key={page._id}
-                path={`/${page.slug.current}`}
-                element={<Component />}
-              />
-            );
-          })}
+        {pages.map((page) => {
+          const slug = page.slug?.current || ''
+          if (!slug || slug === '/') {
+            return <Route key={page._id} path="/" element={<Home />} />
+          }
+          const Page = lazy(async () => {
+            try {
+              return await import(
+                `./pages/${slug
+                  .split('-')
+                  .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+                  .join('')}`
+              )
+            } catch {
+              return {default: Template}
+            }
+          }) as ComponentType<unknown>
+          return (
+            <Route
+              key={page._id}
+              path={`/${slug}`}
+              element={
+                <Suspense
+                  fallback={
+                    <div className="flex, justify-center items-center min-h-[40vh]">
+                      <CircularProgress />
+                    </div>
+                  }
+                >
+                  <Page />
+                </Suspense>
+              }
+            />
+          )
+        })}
       </Routes>
     </BrowserRouter>
-  );
+  )
 }
