@@ -5,11 +5,6 @@ import {usePages} from '../hooks/usePages'
 
 export function Header() {
   const {i18n} = useTranslation()
-  const pages = usePages()
-
-  const toggleLang = () => {
-    i18n.changeLanguage(i18n.language === 'FR' ? 'EN' : 'FR')
-  }
 
   return (
     <header className="sticky z-20 p-4 bg-white shadow-sm text-center">
@@ -18,7 +13,7 @@ export function Header() {
       </Link>
       <nav className="text-gray-700">
         <ul className="flex justify-center gap-x-8">
-          {pages.map((page) => (
+          {usePages().map((page) => (
             <NavItem
               key={page._id}
               to={page.slug?.current && page.slug.current !== '/' ? `/${page.slug.current}` : '/'}
@@ -30,7 +25,9 @@ export function Header() {
       </nav>
 
       <button
-        onClick={toggleLang}
+        onClick={() => {
+          i18n.changeLanguage(i18n.language === 'FR' ? 'EN' : 'FR')
+        }}
         className="px-3 py-2 rounded-xl text-sm font-bold absolute flex items-center gap-1.5 top-6 right-6 text-gray-500 hover:bg-amber-50 hover:text-amber-700 transition-colors"
       >
         <svg

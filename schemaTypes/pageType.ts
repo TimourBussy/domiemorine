@@ -22,7 +22,12 @@ export default defineType({
     }),
     defineField({
       name: 'heroImage',
-      type: 'image',
+      type: 'object',
+      fields: [
+        { name: 'src', title: 'Source', type: 'image' },
+        { name: 'altFr', title: 'Texte alternatif Français', type: 'string' },
+        { name: 'altEn', title: 'Alternative text English', type: 'string' },
+      ],
     }),
     defineField({
       name: 'body',

@@ -4,13 +4,11 @@ import {usePages} from './hooks/usePages'
 import Page from './Page'
 
 export default function App() {
-  const pages = usePages()
-
   return (
     <BrowserRouter>
       <Header />
       <Routes>
-        {pages.map((page) => {
+        {usePages().map((page) => {
           const slug = page.slug?.current || ''
           const path = !slug || slug === '/' ? '/' : `/${slug}`
           return <Route key={page._id} path={path} element={<Page slug={slug} />} />
