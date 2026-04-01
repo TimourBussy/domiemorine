@@ -14,6 +14,28 @@ export interface TitleAndParagraph {
   }
 }
 
+export interface CardMenuItem {
+  title: {
+    fr_FR: string
+    en_GB: string
+  }
+  description: {
+    fr_FR: string
+    en_GB: string
+  }
+  destinationPage?: {
+    slug: {
+      current: string
+    }
+  }
+}
+
+export interface CardMenu {
+  _type: 'cardMenu'
+  _key: string
+  cards: CardMenuItem[]
+}
+
 export interface Page {
   _id: string
   title: {
@@ -32,7 +54,7 @@ export interface Page {
     altFr?: string
     altEn?: string
   }
-  body?: TitleAndParagraph[]
+  body?: (TitleAndParagraph | CardMenu)[]
 }
 
 export function usePages() {
@@ -58,8 +80,17 @@ export function usePage(slug: string) {
           body[]{
             _type,
             _key,
-            title,
-            paragraph
+            _type == "titleAndParagraph" => {
+              title,
+              paragraph
+            },
+            _type == "cardMenu" => {
+              cards[]{
+                title,
+                description,
+                destinationPage->{ slug }
+              }
+            }
           }
         }`,
         {slug},

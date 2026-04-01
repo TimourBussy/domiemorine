@@ -45,7 +45,7 @@ export default defineType({
     select: {
       en: 'title.en_GB',
       fr: 'title.fr_FR',
-      media: 'heroImage',
+      media: 'heroImage.src',
     },
     prepare({en, fr, media}) {
       return {

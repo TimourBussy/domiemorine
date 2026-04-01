@@ -2,6 +2,7 @@ import {useTranslation} from 'react-i18next'
 import {usePage} from '../hooks/usePages'
 import {HeroImage} from '../ui/HeroImage'
 import {TitleAndParagraph} from '../ui/TitleAndParagraph'
+import {CardMenu} from '../ui/CardMenu'
 
 export default function Page({slug}: {slug: string}) {
   const page = usePage(slug)
@@ -10,7 +11,7 @@ export default function Page({slug}: {slug: string}) {
   if (!page) return null
 
   return (
-    <main className="flex flex-col gap-16">
+    <main className="flex flex-col mb-16">
       {page.heroImage?.src?.asset?.url && (
         <HeroImage
           src={page.heroImage.src.asset.url}
@@ -18,9 +19,9 @@ export default function Page({slug}: {slug: string}) {
         />
       )}
 
-      <div className="mx-102">
+      <div className="mx-102 mt-16">
         {page.body?.map((block) => {
-          if (block._type === 'titleAndParagraph') {
+          if (block._type === 'titleAndParagraph')
             return (
               <TitleAndParagraph
                 key={block._key}
@@ -28,8 +29,17 @@ export default function Page({slug}: {slug: string}) {
                 paragraph={block.paragraph.fr_FR}
               />
             )
-          }
-          return null
+          else if (block._type === 'cardMenu')
+            return (
+              <CardMenu
+                key={block._key}
+                cards={block.cards.map((card) => ({
+                  title: card.title.fr_FR,
+                  paragraph: card.description.fr_FR,
+                  to: card.destinationPage?.slug.current || '#',
+                }))}
+              />
+            )
         })}
       </div>
     </main>
