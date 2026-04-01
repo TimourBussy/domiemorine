@@ -11,9 +11,13 @@ export interface Page {
     current: string
   }
   heroImage?: {
-    asset: {
-      url: string
+    src: {
+      asset: {
+        url: string
+      }
     }
+    altFr?: string
+    altEn?: string
   }
 }
 
@@ -31,12 +35,19 @@ export function usePage(slug: string) {
     sanityClient
       .fetch(
         `*[_type == "page" && slug.current == $slug][0]{
-        _id, title, slug,
-        heroImage{ asset->{ url } }
+          _id, title, slug,
+          heroImage{
+            src{ asset->{ url } },
+            altFr,
+            altEn
+        }
       }`,
         {slug},
       )
-      .then(setPage)
+      .then((data) => {
+        console.log('usePage result:', data)
+        setPage(data)
+      })
   }, [slug])
   return page
 }
