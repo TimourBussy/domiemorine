@@ -1,11 +1,24 @@
 import {useEffect, useState} from 'react'
 import sanityClient from '../sanityClient'
 
+export interface TitleAndParagraph {
+  _type: 'titleAndParagraph'
+  _key: string
+  title: {
+    fr_FR: string
+    en_GB: string
+  }
+  paragraph: {
+    fr_FR: string
+    en_GB: string
+  }
+}
+
 export interface Page {
   _id: string
   title: {
-    en_GB?: string
-    fr_FR?: string
+    en_GB: string
+    fr_FR: string
   }
   slug: {
     current: string
@@ -19,6 +32,7 @@ export interface Page {
     altFr?: string
     altEn?: string
   }
+  body?: TitleAndParagraph[]
 }
 
 export function usePages() {
@@ -40,8 +54,14 @@ export function usePage(slug: string) {
             src{ asset->{ url } },
             altFr,
             altEn
-        }
-      }`,
+          },
+          body[]{
+            _type,
+            _key,
+            title,
+            paragraph
+          }
+        }`,
         {slug},
       )
       .then((data) => {

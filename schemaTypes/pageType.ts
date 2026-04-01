@@ -9,10 +9,16 @@ export default defineType({
       name: 'title',
       type: 'object',
       fields: [
-        { name: 'fr_FR', title: 'Français', type: 'string' },
-        { name: 'en_GB', title: 'English', type: 'string' },
+        {name: 'fr_FR', title: 'Français', type: 'string'},
+        {name: 'en_GB', title: 'English', type: 'string'},
       ],
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'displayTitle',
+      title: 'Display page title',
+      type: 'boolean',
+      initialValue: true,
     }),
     defineField({
       name: 'slug',
@@ -24,18 +30,15 @@ export default defineType({
       name: 'heroImage',
       type: 'object',
       fields: [
-        { name: 'src', title: 'Source', type: 'image' },
-        { name: 'altFr', title: 'Texte alternatif Français', type: 'string' },
-        { name: 'altEn', title: 'Alternative text English', type: 'string' },
+        {name: 'src', title: 'Source', type: 'image'},
+        {name: 'altFr', title: 'Texte alternatif Français', type: 'string'},
+        {name: 'altEn', title: 'Alternative text English', type: 'string'},
       ],
     }),
     defineField({
       name: 'body',
       type: 'array',
-      of: [
-        {type: 'block'},
-        {type: 'titleAndParagraph' },
-      ],
+      of: [{type: 'block'}, {type: 'titleAndParagraph'}, {type: 'cardMenu'}],
     }),
   ],
   preview: {
@@ -48,7 +51,7 @@ export default defineType({
       return {
         title: `${fr || 'Pas de titre français'} / ${en || 'No English title'}`,
         media,
-      };
+      }
     },
-  }
+  },
 })

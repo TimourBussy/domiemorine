@@ -2,14 +2,15 @@ import {useTranslation} from 'react-i18next'
 import {NavItem} from '../ui/NavItem'
 import {Link} from 'react-router-dom'
 import {usePages} from '../hooks/usePages'
+import { Title } from '../ui/Title'
 
 export function Header() {
   const {i18n} = useTranslation()
 
   return (
-    <header className="sticky z-20 p-4 bg-white shadow-sm text-center">
+    <header className="sticky top-0 z-20 p-4 bg-white shadow-sm text-center">
       <Link to="/">
-        <h1 className="mb-4 text-5xl font-semibold cursor-pointer inline-block">Domi Emorine</h1>
+        <Title level={1} className="mb-4 cursor-pointer inline-block">Domi Emorine</Title>
       </Link>
       <nav className="text-gray-700">
         <ul className="flex justify-center gap-x-8">

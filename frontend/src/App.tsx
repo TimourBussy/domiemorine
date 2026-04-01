@@ -1,7 +1,7 @@
 import {Header} from './layout/Header'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import {usePages} from './hooks/usePages'
-import Page from './Page'
+import Page from './layout/Page'
 
 export default function App() {
   const pages = usePages()
