@@ -36,16 +36,24 @@ export default defineType({
                 input: IconSelector,
               },
             },
+            {
+              name: 'url',
+              title: 'URL',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            },
           ],
           preview: {
             select: {
               name: 'name',
               icon: 'icon',
+              url: 'url',
             },
-            prepare({name, icon}) {
+            prepare({name, icon, url}) {
               const IconComponent = icon ? getIcon(icon) : null
               return {
                 title: name || 'Unnamed',
+                subtitle: url,
                 media: IconComponent && (() => <IconComponent />),
               }
             },
