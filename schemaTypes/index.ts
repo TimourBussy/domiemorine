@@ -1,5 +1,7 @@
-import pageType from "./pageType";
-import titleAndParagraph from "./titleAndParagraph";
+import page from "./page";
+import title from "./title";
+import paragraph from "./paragraph";
 import cardMenu from "./cardMenu";
+import group from "./group";
 
-export const schemaTypes = [pageType, titleAndParagraph, cardMenu];
+export const schemaTypes = [page, title, paragraph, cardMenu, group];

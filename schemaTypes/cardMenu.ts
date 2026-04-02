@@ -18,8 +18,8 @@ export default defineType({
               title: 'Title',
               type: 'object',
               fields: [
-                {name: 'fr_FR', title: 'Français', type: 'string'},
-                {name: 'en_GB', title: 'English', type: 'string'},
+                {name: 'FR', title: 'Français', type: 'string'},
+                {name: 'EN', title: 'English', type: 'string'},
               ],
               validation: (rule) => rule.required(),
             },
@@ -28,8 +28,8 @@ export default defineType({
               title: 'Description',
               type: 'object',
               fields: [
-                {name: 'fr_FR', title: 'Français', type: 'text'},
-                {name: 'en_GB', title: 'English', type: 'text'},
+                {name: 'FR', title: 'Français', type: 'text'},
+                {name: 'EN', title: 'English', type: 'text'},
               ],
             },
             {
@@ -43,4 +43,15 @@ export default defineType({
       ],
     }),
   ],
+  preview: {
+    select: {
+      cards: 'cards',
+    },
+    prepare({cards}) {
+      return {
+        title: `Card Menu`,
+        subtitle: `${cards?.length || 0} card${cards?.length !== 1 ? 's' : ''}`,
+      }
+    },
+  },
 })

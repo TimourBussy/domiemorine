@@ -8,12 +8,12 @@ const titleStyle = tv({
       1: 'text-5xl',
       2: 'text-4xl',
       3: 'text-xl',
+      4: 'text-lg',
+      5: 'text-md',
+      6: '',
     },
     colored: {
       true: 'text-amber-700',
-    },
-    defaultVariants: {
-      colored: false,
     },
   },
 })
@@ -24,7 +24,7 @@ export function Title({
   className,
   children,
 }: {
-  level: 1 | 2 | 3
+  level: 1 | 2 | 3 | 4 | 5 | 6
   colored?: boolean
   className?: string
   children: string

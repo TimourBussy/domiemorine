@@ -1,27 +1,43 @@
 import {useEffect, useState} from 'react'
 import sanityClient from '../sanityClient'
 
-export interface TitleAndParagraph {
-  _type: 'titleAndParagraph'
+export interface IGroup {
+  _type: 'group'
   _key: string
-  title: {
-    fr_FR: string
-    en_GB: string
-  }
-  paragraph: {
-    fr_FR: string
-    en_GB: string
-  }
+  blocks: (ITitle | IParagraph | ICardMenu)[]
+  marginTop: number
+  marginBottom: number
 }
 
-export interface CardMenuItem {
+export interface ITitle {
+  _type: 'title'
+  _key: string
+  content: {
+    FR: string
+    EN: string
+  }
+  level: 2 | 3 | 4 | 5 | 6
+  colored: boolean
+}
+
+export interface IParagraph {
+  _type: 'paragraph'
+  _key: string
+  content: {
+    FR: string
+    EN: string
+  }
+  size: 'medium' | 'large'
+}
+
+export interface ICardMenuItem {
   title: {
-    fr_FR: string
-    en_GB: string
+    FR: string
+    EN: string
   }
   description: {
-    fr_FR: string
-    en_GB: string
+    FR: string
+    EN: string
   }
   destinationPage?: {
     slug: {
@@ -30,17 +46,17 @@ export interface CardMenuItem {
   }
 }
 
-export interface CardMenu {
+export interface ICardMenu {
   _type: 'cardMenu'
   _key: string
-  cards: CardMenuItem[]
+  cards: ICardMenuItem[]
 }
 
 export interface Page {
   _id: string
   title: {
-    en_GB: string
-    fr_FR: string
+    EN: string
+    FR: string
   }
   slug: {
     current: string
@@ -54,7 +70,7 @@ export interface Page {
     altFr?: string
     altEn?: string
   }
-  body?: (TitleAndParagraph | CardMenu)[]
+  body?: (ITitle | IParagraph | ICardMenu | IGroup)[]
 }
 
 export function usePages() {
@@ -80,15 +96,44 @@ export function usePage(slug: string) {
           body[]{
             _type,
             _key,
-            _type == "titleAndParagraph" => {
-              title,
-              paragraph
+            _type == "title" => {
+              content,
+              level,
+              colored
+            },
+            _type == "paragraph" => {
+              content,
+              size
             },
             _type == "cardMenu" => {
               cards[]{
                 title,
                 description,
                 destinationPage->{ slug }
+              }
+            },
+            _type == "group" => {
+              marginTop,
+              marginBottom,
+              blocks[]{
+                _type,
+                _key,
+                _type == "title" => {
+                  content,
+                  level,
+                  colored
+                },
+                _type == "paragraph" => {
+                  content,
+                  size
+                },
+                _type == "cardMenu" => {
+                  cards[]{
+                    title,
+                    description,
+                    destinationPage->{ slug }
+                  }
+                }
               }
             }
           }

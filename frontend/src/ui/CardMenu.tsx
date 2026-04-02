@@ -1,4 +1,4 @@
-import {Card} from './Card'
+import {LinkCard} from './LinkCard'
 
 export function CardMenu({
   cards,
@@ -10,10 +10,10 @@ export function CardMenu({
   }[]
 }) {
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <article className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {cards.map((card, index) => (
-        <Card key={index} title={card.title} paragraph={card.paragraph} to={card.to} />
+        <LinkCard key={index} title={card.title} paragraph={card.paragraph} to={card.to} />
       ))}
-    </section>
+    </article>
   )
 }

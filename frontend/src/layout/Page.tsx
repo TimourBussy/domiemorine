@@ -1,8 +1,10 @@
 import {useTranslation} from 'react-i18next'
 import {usePage} from '../hooks/usePages'
 import {HeroImage} from '../ui/HeroImage'
-import {TitleAndParagraph} from '../ui/TitleAndParagraph'
+import {Title} from '../ui/Title'
+import {Paragraph} from '../ui/Paragraph'
 import {CardMenu} from '../ui/CardMenu'
+import {Group} from '../ui/Group'
 
 export default function Page({slug}: {slug: string}) {
   const page = usePage(slug)
@@ -19,23 +21,36 @@ export default function Page({slug}: {slug: string}) {
         />
       )}
 
-      <div className="mx-102 mt-16">
+      <div className="mx-86 mt-16 flex flex-col gap-16">
         {page.body?.map((block) => {
-          if (block._type === 'titleAndParagraph')
+          if (block._type === 'group')
             return (
-              <TitleAndParagraph
+              <Group
                 key={block._key}
-                title={block.title.fr_FR}
-                paragraph={block.paragraph.fr_FR}
+                blocks={block.blocks}
+                marginTop={block.marginTop}
+                marginBottom={block.marginBottom}
               />
+            )
+          else if (block._type === 'title')
+            return (
+              <Title key={block._key} level={block.level} colored={block.colored}>
+                {i18n.language === 'FR' ? block.content.FR : block.content.EN}
+              </Title>
+            )
+          else if (block._type === 'paragraph')
+            return (
+              <Paragraph key={block._key} size={block.size}>
+                {i18n.language === 'FR' ? block.content.FR : block.content.EN}
+              </Paragraph>
             )
           else if (block._type === 'cardMenu')
             return (
               <CardMenu
                 key={block._key}
                 cards={block.cards.map((card) => ({
-                  title: card.title.fr_FR,
-                  paragraph: card.description.fr_FR,
+                  title: i18n.language === 'FR' ? card.title.FR : card.title.EN,
+                  paragraph: i18n.language === 'FR' ? card.description.FR : card.description.EN,
                   to: card.destinationPage?.slug.current || '#',
                 }))}
               />

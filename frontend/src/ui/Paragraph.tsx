@@ -4,17 +4,17 @@ const paragraphStyle = tv({
   base: 'text-gray-700 text-center whitespace-pre-wrap',
   variants: {
     size: {
-      small: 'text-sm',
-      large: 'text-lg',
+      medium: 'text-md',
+      large: 'text-lg/7 mx-16',
     },
   },
 })
 
 export function Paragraph({
-  size = 'small',
+  size = 'medium',
   children,
 }: {
-  size?: 'small' | 'large'
+  size?: 'medium' | 'large'
   children: string
 }) {
   return <p className={paragraphStyle({size})}>{children}</p>

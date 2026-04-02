@@ -9,8 +9,8 @@ export default defineType({
       name: 'title',
       type: 'object',
       fields: [
-        {name: 'fr_FR', title: 'Français', type: 'string'},
-        {name: 'en_GB', title: 'English', type: 'string'},
+        {name: 'FR', title: 'Français', type: 'string'},
+        {name: 'EN', title: 'English', type: 'string'},
       ],
       validation: (rule) => rule.required(),
     }),
@@ -38,18 +38,24 @@ export default defineType({
     defineField({
       name: 'body',
       type: 'array',
-      of: [{type: 'block'}, {type: 'titleAndParagraph'}, {type: 'cardMenu'}],
+      of: [
+        {type: 'block'},
+        {type: 'group' },
+        {type: 'title' },
+        {type: 'paragraph' },
+        {type: 'cardMenu' },
+      ],
     }),
   ],
   preview: {
     select: {
-      en: 'title.en_GB',
-      fr: 'title.fr_FR',
+      en: 'title.EN',
+      fr: 'title.FR',
       media: 'heroImage.src',
     },
     prepare({en, fr, media}) {
       return {
-        title: `${fr || 'Pas de titre français'} / ${en || 'No English title'}`,
+        title: `${fr || ''} / ${en || ''}`,
         media,
       }
     },

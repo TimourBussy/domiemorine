@@ -19,7 +19,7 @@ export function Header() {
               key={page._id}
               to={page.slug?.current && page.slug.current !== '/' ? `/${page.slug.current}` : '/'}
             >
-              {i18n.language === 'FR' ? page.title.fr_FR : page.title.en_GB}
+              {i18n.language === 'FR' ? page.title.FR : page.title.EN}
             </NavItem>
           ))}
         </ul>
