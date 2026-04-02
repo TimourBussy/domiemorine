@@ -1,6 +1,6 @@
 import {defineField, defineType} from 'sanity'
 import {IconSelector} from '../sanity/components/IconSelector'
-import {SocialMediaPreview} from '../sanity/components/SocialMediaPreview'
+import {getIcon} from '../sanity/lib/iconsRegistry'
 
 export default defineType({
   name: 'settings',
@@ -42,7 +42,13 @@ export default defineType({
               name: 'name',
               icon: 'icon',
             },
-            component: SocialMediaPreview,
+            prepare({name, icon}) {
+              const IconComponent = icon ? getIcon(icon) : null
+              return {
+                title: name || 'Unnamed',
+                media: IconComponent && (() => <IconComponent />),
+              }
+            },
           },
         },
       ],
