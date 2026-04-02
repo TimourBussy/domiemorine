@@ -1,16 +1,22 @@
 import {useEffect, useState} from 'react'
 import sanityClient from '../sanityClient'
 
-export interface ISocialLink {
+export interface ISocialMediaItem {
   name: string
-  url: string
   icon: string
+  url: string
+}
+
+export interface ISettings {
+  _id: string
+  socialMedias: ISocialMediaItem[]
 }
 
 export interface ISocialLinks {
   _type: 'socialLinks'
   _key: string
-  links: ISocialLink[]
+  size: 'small' | 'medium' | 'large'
+  colored: boolean
 }
 
 export interface IGroup {
@@ -125,11 +131,8 @@ export function usePage(slug: string) {
               }
             },
             _type == "socialLinks" => {
-              links[]{
-                name,
-                url,
-                icon
-              }
+              size,
+              colored
             },
             _type == "group" => {
               marginTop,
@@ -154,11 +157,8 @@ export function usePage(slug: string) {
                   }
                 },
                 _type == "socialLinks" => {
-                  links[]{
-                    name,
-                    url,
-                    icon
-                  }
+                  size,
+                  colored
                 }
               }
             }
@@ -167,9 +167,27 @@ export function usePage(slug: string) {
         {slug},
       )
       .then((data) => {
-        console.log('usePage result:', data)
         setPage(data)
       })
   }, [slug])
   return page
+}
+
+export function useSettings() {
+  const [settings, setSettings] = useState<ISettings | null>(null)
+  useEffect(() => {
+    sanityClient
+      .fetch(
+        `*[_type == "settings"][0]{
+          _id,
+          socialMedias[]{
+            name,
+            icon,
+            url
+          }
+        }`,
+      )
+      .then(setSettings)
+  }, [])
+  return settings
 }

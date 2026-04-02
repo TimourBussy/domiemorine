@@ -6,68 +6,35 @@ export default defineType({
   type: 'object',
   fields: [
     defineField({
-      name: 'links',
-      title: 'Links',
-      type: 'array',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            {
-              name: 'network',
-              title: 'Network',
-              type: 'string',
-              options: {
-                list: [
-                  {title: 'Custom', value: 'custom'},
-                ],
-                layout: 'dropdown',
-              },
-              initialValue: 'custom',
-            },
-            {
-              name: 'name',
-              title: 'Name',
-              type: 'string',
-              validation: (rule) => rule.required(),
-            },
-            {
-              name: 'icon',
-              title: 'Icon',
-              type: 'string',
-              validation: (rule) => rule.required(),
-            },
-            {
-              name: 'url',
-              title: 'URL',
-              type: 'url',
-              validation: (rule) => rule.required(),
-            },
-          ],
-          preview: {
-            select: {
-              name: 'name',
-              icon: 'icon',
-            },
-            prepare({name, icon}) {
-              return {
-                title: name,
-                subtitle: icon,
-              }
-            },
-          },
-        },
-      ],
+      name: 'size',
+      title: 'Size',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Small', value: 'small'},
+          {title: 'Medium', value: 'medium'},
+          {title: 'Large', value: 'large'},
+        ],
+        layout: 'dropdown',
+      },
+      initialValue: 'medium',
+    }),
+    defineField({
+      name: 'colored',
+      title: 'Colored',
+      type: 'boolean',
+      initialValue: false,
     }),
   ],
   preview: {
     select: {
-      links: 'links',
+      size: 'size',
+      colored: 'colored',
     },
-    prepare({links}) {
+    prepare({size, colored}) {
       return {
         title: 'Social Links',
-        subtitle: `${links?.length || 0} link${links?.length !== 1 ? 's' : ''}`,
+        subtitle: `${size} ${colored ? '(Colored)' : ''}`.trim(),
       }
     },
   },

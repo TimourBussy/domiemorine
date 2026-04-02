@@ -5,7 +5,6 @@ import Page from './layout/Page'
 
 export default function App() {
   const pages = usePages()
-  console.log(pages)
 
   return (
     <BrowserRouter>
@@ -13,8 +12,13 @@ export default function App() {
       <Routes>
         {pages.map((page) => {
           const slug = page.slug?.current || ''
-          const path = !slug || slug === '/' ? '/' : `/${slug}`
-          return <Route key={page._id} path={path} element={<Page slug={slug} />} />
+          return (
+            <Route
+              key={page._id}
+              path={!slug || slug === '/' ? '/' : `/${slug}`}
+              element={<Page slug={slug} />}
+            />
+          )
         })}
       </Routes>
     </BrowserRouter>
