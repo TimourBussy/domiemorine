@@ -1,10 +1,22 @@
 import {useEffect, useState} from 'react'
 import sanityClient from '../sanityClient'
 
+export interface ISocialLink {
+  name: string
+  url: string
+  icon: string
+}
+
+export interface ISocialLinks {
+  _type: 'socialLinks'
+  _key: string
+  links: ISocialLink[]
+}
+
 export interface IGroup {
   _type: 'group'
   _key: string
-  blocks: (ITitle | IParagraph | ICardMenu)[]
+  blocks: (ITitle | IParagraph | ICardMenu | ISocialLinks)[]
   marginTop: number
   marginBottom: number
 }
@@ -70,7 +82,7 @@ export interface Page {
     altFr?: string
     altEn?: string
   }
-  body?: (ITitle | IParagraph | ICardMenu | IGroup)[]
+  body?: (ITitle | IParagraph | ICardMenu | IGroup | ISocialLinks)[]
 }
 
 export function usePages() {
@@ -112,6 +124,13 @@ export function usePage(slug: string) {
                 destinationPage->{ slug }
               }
             },
+            _type == "socialLinks" => {
+              links[]{
+                name,
+                url,
+                icon
+              }
+            },
             _type == "group" => {
               marginTop,
               marginBottom,
@@ -132,6 +151,13 @@ export function usePage(slug: string) {
                     title,
                     description,
                     destinationPage->{ slug }
+                  }
+                },
+                _type == "socialLinks" => {
+                  links[]{
+                    name,
+                    url,
+                    icon
                   }
                 }
               }

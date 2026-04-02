@@ -2,29 +2,46 @@ import {useTranslation} from 'react-i18next'
 import {Title} from './Title'
 import {Paragraph} from './Paragraph'
 import {CardMenu} from './CardMenu'
-import type {ITitle, IParagraph, ICardMenu, IGroup} from '../hooks/usePages'
+import {SocialLinks} from './SocialLinks'
+import type {ITitle, IParagraph, ICardMenu, ISocialLinks} from '../hooks/usePages'
 
 export function Group({
   blocks,
   marginTop,
   marginBottom,
 }: {
-  blocks: (ITitle | IParagraph | ICardMenu)[]
+  blocks: (ITitle | IParagraph | ICardMenu | ISocialLinks)[]
   marginTop: number
   marginBottom: number
 }) {
   const {i18n} = useTranslation()
 
-  const className = [
-    'flex flex-col gap-6',
-    marginTop > 0 ? `mt-${marginTop}` : '',
-    marginBottom > 0 ? `mb-${marginBottom}` : '',
-  ]
-    .filter(Boolean)
-    .join(' ')
-
   return (
-    <section className={className}>
+    <section
+      className={[
+        'flex flex-col gap-6',
+        {
+          0: '',
+          4: 'mt-4',
+          8: 'mt-8',
+          12: 'mt-12',
+          16: 'mt-16',
+          20: 'mt-20',
+          24: 'mt-24',
+        }[marginTop],
+        {
+          0: '',
+          4: 'mb-4',
+          8: 'mb-8',
+          12: 'mb-12',
+          16: 'mb-16',
+          20: 'mb-20',
+          24: 'mb-24',
+        }[marginBottom],
+      ]
+        .filter(Boolean)
+        .join(' ')}
+    >
       {blocks.map((block) => {
         if (block._type === 'title')
           return (
@@ -48,6 +65,10 @@ export function Group({
                 to: card.destinationPage?.slug.current || '#',
               }))}
             />
+          )
+        else if (block._type === 'socialLinks')
+          return (
+            <SocialLinks key={block._key} links={block.links} />
           )
       })}
     </section>

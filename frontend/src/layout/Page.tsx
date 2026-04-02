@@ -5,6 +5,7 @@ import {Title} from '../ui/Title'
 import {Paragraph} from '../ui/Paragraph'
 import {CardMenu} from '../ui/CardMenu'
 import {Group} from '../ui/Group'
+import {SocialLinks} from '../ui/SocialLinks'
 
 export default function Page({slug}: {slug: string}) {
   const page = usePage(slug)
@@ -54,6 +55,10 @@ export default function Page({slug}: {slug: string}) {
                   to: card.destinationPage?.slug.current || '#',
                 }))}
               />
+            )
+          else if (block._type === 'socialLinks')
+            return (
+              <SocialLinks key={block._key} links={block.links} />
             )
         })}
       </div>

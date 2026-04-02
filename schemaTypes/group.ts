@@ -13,6 +13,7 @@ export default defineType({
         {type: 'title'},
         {type: 'paragraph'},
         {type: 'cardMenu'},
+        {type: 'socialLinks'},
       ],
     }),
     defineField({

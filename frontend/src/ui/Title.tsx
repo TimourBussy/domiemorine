@@ -6,11 +6,11 @@ const titleStyle = tv({
   variants: {
     level: {
       1: 'text-5xl',
-      2: 'text-4xl',
-      3: 'text-xl',
-      4: 'text-lg',
-      5: 'text-md',
-      6: '',
+      2: 'text-5xl',
+      3: 'text-4xl',
+      4: 'text-3xl',
+      5: 'text-2xl',
+      6: 'text-xl',
     },
     colored: {
       true: 'text-amber-700',
