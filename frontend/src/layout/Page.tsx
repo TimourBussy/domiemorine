@@ -3,7 +3,7 @@ import {usePage} from '../hooks/usePages'
 import {HeroImage} from '../ui/HeroImage'
 import {Block} from '../ui/Block'
 
-export default function Page({slug}: {slug: string}) {
+export function Page({slug}: {slug: string}) {
   const page = usePage(slug)
   const {i18n} = useTranslation()
 

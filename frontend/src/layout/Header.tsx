@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom'
 import {usePages} from '../hooks/usePages'
 import {Title} from '../ui/Title'
 import {useState} from 'react'
+import {FiMenu, FiX} from 'react-icons/fi'
 
 export function Header() {
   const {i18n} = useTranslation()
@@ -14,7 +15,7 @@ export function Header() {
     <header className="sticky top-0 z-20 bg-white shadow-sm">
       <div className="pt-4 sm:pb-4 text-center">
         <Link to="/">
-          <Title level={1} className="mb-4 cursor-pointer inline-block">
+          <Title level={1} className="sm:mb-4 cursor-pointer inline-block">
             Domi Emorine
           </Title>
         </Link>
@@ -39,21 +40,18 @@ export function Header() {
       </div>
 
       {/* Lang & Hamburger */}
-      <div className="sm:absolute sm:top-6 sm:right-6 flex flex-row-reverse items-center justify-center gap-4 sm:gap-2">
+      <div className="sm:absolute sm:top-0 sm:bottom-0 right-6 flex flex-row-reverse items-center justify-center gap-4 sm:gap-2">
         {/* Hamburger (mobile) */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="md:hidden py-2 rounded-xl text-gray-500 hover:bg-amber-50 hover:text-amber-700 transition-colors"
           aria-label="Toggle menu"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 -960 960 960"
-            width="24px"
-            fill="currentColor"
-          >
-            <path d="M120-240v-60h720v60H120zm0-210v-60h720v60H120zm0-210v-60h720v60H120z" />
-          </svg>
+          {mobileMenuOpen ? (
+            <FiX size={24} />
+          ) : (
+            <FiMenu size={24} />
+          )}
         </button>
 
         {/* Lang */}
@@ -61,7 +59,7 @@ export function Header() {
           onClick={() => {
             i18n.changeLanguage(i18n.language === 'FR' ? 'EN' : 'FR')
           }}
-          className="py-2 rounded-xl text-sm font-bold flex items-center gap-1.5 text-gray-500 hover:bg-amber-50 hover:text-amber-700 transition-colors"
+          className="p-2 rounded-xl text-sm font-bold flex items-center gap-1.5 text-gray-500 hover:bg-amber-50 hover:text-amber-700 transition-colors"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

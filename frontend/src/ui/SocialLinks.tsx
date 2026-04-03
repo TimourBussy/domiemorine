@@ -3,10 +3,10 @@ import {getIcon} from '../../../sanity/lib/iconsRegistry'
 import {useSettings} from '../hooks/usePages'
 
 const linkStyle = tv({
-  base: 'flex items-center justify-center rounded-full p-4 transition-colors',
+  base: 'flex items-center justify-center rounded-full transition-colors',
   variants: {
     colored: {
-      true: 'bg-amber-100 group-hover:bg-amber-200',
+      true: 'p-4 bg-amber-100 group-hover:bg-amber-200',
     },
   },
 })
@@ -14,9 +14,11 @@ const linkStyle = tv({
 export function SocialLinks({
   size = 'medium',
   colored = false,
+  inFooter = false,
 }: {
   size?: 'small' | 'medium' | 'large'
   colored?: boolean
+  inFooter?: boolean
 }) {
   const settings = useSettings()
 
@@ -24,7 +26,9 @@ export function SocialLinks({
   if (!settings.socialMedias?.length) return null
 
   return (
-    <article className="flex gap-6 flex-wrap justify-center text-center">
+    <article
+      className="flex flex-wrap justify-center text-center gap-6"
+    >
       {settings.socialMedias.map((link, index) => {
         const IconComponent = getIcon(link.icon)
         return (
@@ -33,12 +37,12 @@ export function SocialLinks({
               <IconComponent
                 size={
                   {
-                    small: 16,
-                    medium: 24,
+                    small: 24,
+                    medium: 28,
                     large: 32,
                   }[size]
                 }
-                className={colored ? 'text-amber-700' : ''}
+                className={colored ? 'text-amber-700' : (inFooter ? 'text-gray-400 group-hover:text-amber-700' : 'text-gray-800 group-hover:text-amber-500')}
               />
             </div>
             {size === 'large' && (
