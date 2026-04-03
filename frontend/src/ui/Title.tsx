@@ -5,12 +5,12 @@ const titleStyle = tv({
   base: 'text-center font-semibold',
   variants: {
     level: {
-      1: 'text-5xl',
-      2: 'text-5xl',
-      3: 'text-4xl',
-      4: 'text-3xl',
-      5: 'text-2xl',
-      6: 'text-xl',
+      1: 'text-4xl sm:text-5xl',
+      2: 'text-4xl sm:text-5xl',
+      3: 'text-3xl sm:text-4xl',
+      4: 'text-2xl sm:text-3xl',
+      5: 'text-xl sm:text-2xl',
+      6: 'text-lg sm:text-xl',
     },
     colored: {
       true: 'text-amber-700',

@@ -11,7 +11,16 @@ export type TBlock = ITitle | IParagraph | ICardMenu | ISocialLinks | IGroup
 export function Block({block}: {block: TBlock}) {
   const {i18n} = useTranslation()
 
-  if (block._type === 'title')
+  if (block._type === 'group')
+    return (
+      <Group
+        key={block._key}
+        blocks={block.blocks}
+        marginTop={block.marginTop}
+        marginBottom={block.marginBottom}
+      />
+    )
+  else if (block._type === 'title')
     return (
       <Title key={block._key} level={block.level} colored={block.colored}>
         {i18n.language === 'FR' ? block.content.FR : block.content.EN}
@@ -32,15 +41,6 @@ export function Block({block}: {block: TBlock}) {
           paragraph: i18n.language === 'FR' ? card.description.FR : card.description.EN,
           to: card.destinationPage?.slug.FR?.current || '#',
         }))}
-      />
-    )
-  else if (block._type === 'group')
-    return (
-      <Group
-        key={block._key}
-        blocks={block.blocks}
-        marginTop={block.marginTop}
-        marginBottom={block.marginBottom}
       />
     )
   else if (block._type === 'socialLinks')

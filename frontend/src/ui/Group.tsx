@@ -12,7 +12,7 @@ export function Group({
   return (
     <section
       className={[
-        'flex flex-col gap-6',
+        'flex flex-col gap-4 sm:gap-6',
         {
           0: '',
           4: 'mt-4',
