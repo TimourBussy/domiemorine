@@ -30,7 +30,7 @@ export function Block({block}: {block: TBlock}) {
         cards={block.cards.map((card) => ({
           title: i18n.language === 'FR' ? card.title.FR : card.title.EN,
           paragraph: i18n.language === 'FR' ? card.description.FR : card.description.EN,
-          to: card.destinationPage?.slug.current || '#',
+          to: card.destinationPage?.slug.FR?.current || '#',
         }))}
       />
     )

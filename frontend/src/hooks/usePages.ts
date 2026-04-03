@@ -59,7 +59,12 @@ export interface ICardMenuItem {
   }
   destinationPage?: {
     slug: {
-      current: string
+      FR: {
+        current: string
+      }
+      EN: {
+        current: string
+      }
     }
   }
 }
@@ -77,7 +82,12 @@ export interface Page {
     FR: string
   }
   slug: {
-    current: string
+    FR: {
+      current: string
+    }
+    EN: {
+      current: string
+    }
   }
   heroImage?: {
     src: {
@@ -94,7 +104,7 @@ export interface Page {
 export function usePages() {
   const [pages, setPages] = useState<Page[]>([])
   useEffect(() => {
-    sanityClient.fetch(`*[_type == "page"]{_id, title, slug}`).then(setPages)
+    sanityClient.fetch(`*[_type == "page"]{_id, title, slug { FR, EN }}`).then(setPages)
   }, [])
   return pages
 }
@@ -102,10 +112,15 @@ export function usePages() {
 export function usePage(slug: string) {
   const [page, setPage] = useState<Page | null>(null)
   useEffect(() => {
+    // Ne pas fetcher si slug n'existe pas (sauf "" qui est valide)
+    if (slug === null || slug === undefined) {
+      return
+    }
+
     sanityClient
       .fetch(
-        `*[_type == "page" && slug.current == $slug][0]{
-          _id, title, slug,
+        `*[_type == "page" && (slug.FR.current == $slug || slug.EN.current == $slug)][0]{
+          _id, title, slug { FR, EN },
           heroImage{
             src{ asset->{ url } },
             altFr,
@@ -127,7 +142,7 @@ export function usePage(slug: string) {
               cards[]{
                 title,
                 description,
-                destinationPage->{ slug }
+                destinationPage->{ slug { FR, EN } }
               }
             },
             _type == "socialLinks" => {
@@ -153,7 +168,7 @@ export function usePage(slug: string) {
                   cards[]{
                     title,
                     description,
-                    destinationPage->{ slug }
+                    destinationPage->{ slug { FR, EN } }
                   }
                 },
                 _type == "socialLinks" => {

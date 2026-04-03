@@ -35,7 +35,9 @@ export function Group({
         .filter(Boolean)
         .join(' ')}
     >
-      {blocks.map((block) => <Block block={block} />)}
+      {blocks.map((block) => (
+        <Block key={block._key} block={block} />
+      ))}
     </section>
   )
 }

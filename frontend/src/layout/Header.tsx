@@ -17,7 +17,7 @@ export function Header() {
           {usePages().map((page) => (
             <NavItem
               key={page._id}
-              to={page.slug?.current && page.slug.current !== '/' ? `/${page.slug.current}` : '/'}
+              to={page.slug?.FR?.current && page.slug.FR.current !== '/' ? `/${page.slug.FR.current}` : '/'}
             >
               {i18n.language === 'FR' ? page.title.FR : page.title.EN}
             </NavItem>
