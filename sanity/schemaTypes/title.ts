@@ -7,7 +7,7 @@ export default defineType({
   fields: [
     defineField({
       name: 'content',
-      title: 'Title',
+      title: 'Title *',
       type: 'object',
       fields: [
         { name: 'FR', title: 'Français', type: 'string' },
@@ -17,7 +17,7 @@ export default defineType({
     }),
     defineField({
       name: 'level',
-      title: 'Level',
+      title: 'Level *',
       type: 'number',
       options: {
         list: [2, 3, 4, 5, 6],

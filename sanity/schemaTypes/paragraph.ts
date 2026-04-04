@@ -7,7 +7,7 @@ export default defineType({
   fields: [
     defineField({
       name: 'content',
-      title: 'Paragraph',
+      title: 'Paragraph *',
       type: 'object',
       fields: [
         { name: 'FR', title: 'Français', type: 'text' },

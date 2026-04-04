@@ -1,14 +1,15 @@
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
-import {schemaTypes} from './schemaTypes'
+import {schemaTypes} from './sanity/schemaTypes'
+import {DATASET, PROJECT_ID} from './sanity/settings'
 
 export default defineConfig({
   name: 'default',
   title: 'domiemorine',
 
-  projectId: 'sedrvse1',
-  dataset: 'production',
+  projectId: PROJECT_ID,
+  dataset: DATASET,
 
   plugins: [
     structureTool({
@@ -18,11 +19,7 @@ export default defineConfig({
           .items([
             S.listItem()
               .title('Settings')
-              .child(
-                S.document()
-                  .schemaType('settings')
-                  .documentId('settings')
-              ),
+              .child(S.document().schemaType('settings').documentId('settings')),
             S.divider(),
             S.documentTypeListItem('page').title('Pages'),
           ]),

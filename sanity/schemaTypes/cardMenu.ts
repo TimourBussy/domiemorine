@@ -15,7 +15,7 @@ export default defineType({
           fields: [
             {
               name: 'title',
-              title: 'Title',
+              title: 'Title *',
               type: 'object',
               fields: [
                 {name: 'FR', title: 'Français', type: 'string'},
@@ -25,7 +25,7 @@ export default defineType({
             },
             {
               name: 'description',
-              title: 'Description',
+              title: 'Description *',
               type: 'object',
               fields: [
                 {name: 'FR', title: 'Français', type: 'text'},

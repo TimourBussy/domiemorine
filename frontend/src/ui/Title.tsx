@@ -7,10 +7,10 @@ const titleStyle = tv({
     level: {
       1: 'uppercase [word-spacing:0.75rem] font-light tracking-tight text-4xl sm:text-5xl',
       2: 'text-4xl sm:text-5xl',
-      3: 'text-3xl sm:text-4xl',
-      4: 'text-2xl sm:text-3xl',
-      5: 'text-xl sm:text-2xl',
-      6: 'text-lg sm:text-xl',
+      3: 'text-2xl sm:text-3xl',
+      4: 'text-xl sm:text-2xl',
+      5: 'text-lg sm:text-xl',
+      6: 'sm:text-lg',
     },
     colored: {
       true: 'text-amber-700',

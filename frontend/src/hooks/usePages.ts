@@ -77,6 +77,7 @@ export interface ICardMenu {
 
 export interface Page {
   _id: string
+  order?: number
   title: {
     EN: string
     FR: string
@@ -89,6 +90,7 @@ export interface Page {
       current: string
     }
   }
+  displayTitle?: boolean
   heroImage?: {
     src: {
       asset: {
@@ -104,7 +106,7 @@ export interface Page {
 export function usePages() {
   const [pages, setPages] = useState<Page[]>([])
   useEffect(() => {
-    sanityClient.fetch(`*[_type == "page"]{_id, title, slug { FR, EN }}`).then(setPages)
+    sanityClient.fetch(`*[_type == "page"]|order(order asc, _createdAt asc){_id, order, title, slug { FR, EN }}`).then(setPages)
   }, [])
   return pages
 }
@@ -126,6 +128,7 @@ export function usePage(slug: string) {
             altFr,
             altEn
           },
+          displayTitle,
           body[]{
             _type,
             _key,

@@ -1,6 +1,6 @@
 import {defineField, defineType} from 'sanity'
-import {IconSelector} from '../sanity/components/IconSelector'
-import {getIcon} from '../sanity/lib/iconsRegistry'
+import {IconSelector} from '../components/IconSelector'
+import {getIcon} from '../lib/iconsRegistry'
 
 export default defineType({
   name: 'settings',
