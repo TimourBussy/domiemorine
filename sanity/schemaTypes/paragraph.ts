@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { spacingFields } from './spacing'
 
 export default defineType({
   name: 'paragraph',
@@ -17,16 +18,18 @@ export default defineType({
     }),
     defineField({
       name: 'size',
-      title: 'Size',
+      title: 'Size *',
       type: 'string',
       options: {
         list: [
-          { title: 'Medium', value: 'medium' },
+          { title: 'Small', value: 'small' },
           { title: 'Large', value: 'large' },
         ],
       },
-      initialValue: 'medium',
+      initialValue: 'small',
+      validation: (rule) => rule.required()
     }),
+    ...spacingFields,
   ],
   preview: {
     select: {

@@ -12,19 +12,14 @@ export interface ISettings {
   socialMedias: ISocialMediaItem[]
 }
 
-export interface ISocialLinks {
-  _type: 'socialLinks'
-  _key: string
-  size: 'small' | 'medium' | 'large'
-  colored: boolean
-}
-
 export interface IGroup {
   _type: 'group'
   _key: string
   blocks: (ITitle | IParagraph | ICardMenu | ISocialLinks)[]
-  marginTop: number
-  marginBottom: number
+  marginTop?: number
+  marginRight?: number
+  marginBottom?: number
+  marginLeft?: number
 }
 
 export interface ITitle {
@@ -34,8 +29,12 @@ export interface ITitle {
     FR: string
     EN: string
   }
-  level: 2 | 3 | 4 | 5 | 6
+  level: 3 | 4 | 5 | 6
   colored: boolean
+  marginTop?: number
+  marginRight?: number
+  marginBottom?: number
+  marginLeft?: number
 }
 
 export interface IParagraph {
@@ -45,7 +44,11 @@ export interface IParagraph {
     FR: string
     EN: string
   }
-  size: 'medium' | 'large'
+  size: 'small' | 'large'
+  marginTop?: number
+  marginRight?: number
+  marginBottom?: number
+  marginLeft?: number
 }
 
 export interface ICardMenuItem {
@@ -73,6 +76,21 @@ export interface ICardMenu {
   _type: 'cardMenu'
   _key: string
   cards: ICardMenuItem[]
+  marginTop?: number
+  marginRight?: number
+  marginBottom?: number
+  marginLeft?: number
+}
+
+export interface ISocialLinks {
+  _type: 'socialLinks'
+  _key: string
+  size: 'small' | 'medium' | 'large'
+  colored: boolean
+  marginTop?: number
+  marginRight?: number
+  marginBottom?: number
+  marginLeft?: number
 }
 
 export interface Page {
@@ -135,48 +153,82 @@ export function usePage(slug: string) {
             _type == "title" => {
               content,
               level,
-              colored
+              colored,
+              marginTop,
+              marginRight,
+              marginBottom,
+              marginLeft
             },
             _type == "paragraph" => {
               content,
-              size
+              size,
+              marginTop,
+              marginRight,
+              marginBottom,
+              marginLeft
             },
             _type == "cardMenu" => {
               cards[]{
                 title,
                 description,
                 destinationPage->{ slug { FR, EN } }
-              }
+              },
+              marginTop,
+              marginRight,
+              marginBottom,
+              marginLeft
             },
             _type == "socialLinks" => {
               size,
-              colored
+              colored,
+              marginTop,
+              marginRight,
+              marginBottom,
+              marginLeft
             },
             _type == "group" => {
               marginTop,
+              marginRight,
               marginBottom,
+              marginLeft,
               blocks[]{
                 _type,
                 _key,
                 _type == "title" => {
                   content,
                   level,
-                  colored
+                  colored,
+                  marginTop,
+                  marginRight,
+                  marginBottom,
+                  marginLeft
                 },
                 _type == "paragraph" => {
                   content,
-                  size
+                  size,
+                  marginTop,
+                  marginRight,
+                  marginBottom,
+                  marginLeft
                 },
                 _type == "cardMenu" => {
                   cards[]{
                     title,
                     description,
                     destinationPage->{ slug { FR, EN } }
-                  }
+                  },
+                  marginTop,
+                  marginRight,
+                  marginBottom,
+                  marginLeft
                 },
                 _type == "socialLinks" => {
                   size,
-                  colored
+                  colored,
+                  marginTop,
+                  marginRight,
+                  marginBottom,
+                  marginLeft
                 }
               }
             }

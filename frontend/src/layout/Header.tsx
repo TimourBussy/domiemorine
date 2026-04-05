@@ -3,19 +3,32 @@ import {NavItem} from '../ui/NavItem'
 import {Link} from 'react-router-dom'
 import {usePages} from '../hooks/usePages'
 import {Title} from '../ui/Title'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import {FiMenu, FiX} from 'react-icons/fi'
 
 export function Header() {
   const {i18n} = useTranslation()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const pages = usePages()
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 60) setScrolled(true)
+      else if (window.scrollY < 40) setScrolled(false)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
     <header className="sticky top-0 z-20 bg-white shadow-sm">
       <div className="pt-4 sm:pb-4 text-center">
         <Link to="/">
-          <Title level={1} className="sm:mb-4 cursor-pointer inline-block">
+          <Title
+            level={1}
+            className={`sm:mb-4 cursor-pointer inline-block transition-all duration-500 ${scrolled ? 'scale-65' : 'scale-100'} origin-center`}
+          >
             Domi Emorine
           </Title>
         </Link>
@@ -47,11 +60,7 @@ export function Header() {
           className="md:hidden py-2 rounded-xl text-gray-500 hover:bg-amber-50 hover:text-amber-700 transition-colors"
           aria-label="Toggle menu"
         >
-          {mobileMenuOpen ? (
-            <FiX size={24} />
-          ) : (
-            <FiMenu size={24} />
-          )}
+          {mobileMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
         </button>
 
         {/* Lang */}

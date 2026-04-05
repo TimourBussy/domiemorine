@@ -1,4 +1,5 @@
 import {defineField, defineType} from 'sanity'
+import { spacingFields } from './spacing'
 
 export default defineType({
   name: 'socialLinks',
@@ -25,6 +26,7 @@ export default defineType({
       type: 'boolean',
       initialValue: false,
     }),
+    ...spacingFields,
   ],
   preview: {
     select: {

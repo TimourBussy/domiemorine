@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { spacingFields } from './spacing'
 
 export default defineType({
   name: 'title',
@@ -20,7 +21,7 @@ export default defineType({
       title: 'Level *',
       type: 'number',
       options: {
-        list: [2, 3, 4, 5, 6],
+        list: [3, 4, 5, 6],
       },
       initialValue: 3,
       validation: (rule) => rule.required()
@@ -31,6 +32,7 @@ export default defineType({
       type: 'boolean',
       initialValue: false,
     }),
+    ...spacingFields,
   ],
   preview: {
     select: {
