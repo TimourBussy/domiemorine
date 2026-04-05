@@ -12,10 +12,12 @@ const paragraphStyle = tv({
 
 export function Paragraph({
   size = 'small',
+  className,
   children,
 }: {
   size?: 'small' | 'large'
+  className?: string
   children: string
 }) {
-  return <p className={paragraphStyle({size})}>{children}</p>
+  return <p className={paragraphStyle({size, className})}>{children}</p>
 }

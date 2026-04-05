@@ -39,38 +39,31 @@ export function Block({block}: {block: TBlock}) {
       )
     else if (block._type === 'title')
       return (
-        <div className={marginClasses}>
-          <Title key={block._key} level={block.level} colored={block.colored}>
-            {i18n.language === 'FR' ? block.content.FR : block.content.EN}
-          </Title>
-        </div>
+        <Title key={block._key} level={block.level} colored={block.colored} className={marginClasses}>
+          {i18n.language === 'FR' ? block.content.FR : block.content.EN}
+        </Title>
       )
     else if (block._type === 'paragraph')
       return (
-        <div className={marginClasses}>
-          <Paragraph key={block._key} size={block.size}>
-            {i18n.language === 'FR' ? block.content.FR : block.content.EN}
-          </Paragraph>
-        </div>
+        <Paragraph key={block._key} size={block.size} className={marginClasses}>
+          {i18n.language === 'FR' ? block.content.FR : block.content.EN}
+        </Paragraph>
       )
     else if (block._type === 'cardMenu')
       return (
-        <div className={marginClasses}>
-          <CardMenu
-            key={block._key}
-            cards={block.cards.map((card) => ({
-              title: i18n.language === 'FR' ? card.title.FR : card.title.EN,
-              paragraph: i18n.language === 'FR' ? card.description.FR : card.description.EN,
-              to: card.destinationPage?.slug.FR?.current || '#',
-            }))}
-          />
-        </div>
+        <CardMenu
+          key={block._key}
+          className={marginClasses}
+          cards={block.cards.map((card) => ({
+            title: i18n.language === 'FR' ? card.title.FR : card.title.EN,
+            paragraph: i18n.language === 'FR' ? card.description.FR : card.description.EN,
+            to: card.destinationPage?.slug.FR?.current || '#',
+          }))}
+        />
       )
     else if (block._type === 'socialLinks')
       return (
-        <div className={marginClasses}>
-          <SocialLinks key={block._key} size={block.size} colored={block.colored} />
-        </div>
+        <SocialLinks key={block._key} size={block.size} colored={block.colored} className={marginClasses} />
       )
   }
 

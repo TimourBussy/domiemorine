@@ -9,7 +9,7 @@ async function getNextPageOrder() {
     )
     const data = await response.json()
 
-    if (data.result !== null && data.result !== undefined) {
+    if (data.result) {
       return data.result + 1
     }
     return 1

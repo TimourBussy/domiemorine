@@ -15,10 +15,12 @@ export function SocialLinks({
   size = 'medium',
   colored = false,
   inFooter = false,
+  className,
 }: {
   size?: 'small' | 'medium' | 'large'
   colored?: boolean
   inFooter?: boolean
+  className?: string
 }) {
   const settings = useSettings()
 
@@ -27,7 +29,7 @@ export function SocialLinks({
 
   return (
     <article
-      className="flex flex-wrap justify-center text-center gap-6"
+      className={`flex flex-wrap justify-center text-center gap-6 ${className || ''}`}
     >
       {settings.socialMedias.map((link, index) => {
         const IconComponent = getIcon(link.icon)
