@@ -1,7 +1,7 @@
 import {useTranslation} from 'react-i18next'
 import {NavItem} from '../ui/NavItem'
 import {Link} from 'react-router-dom'
-import {usePages} from '../hooks/usePages'
+import {useSettings} from '../hooks/usePages'
 import {Title} from '../ui/Title'
 import {useState, useEffect} from 'react'
 import {FiMenu, FiX} from 'react-icons/fi'
@@ -10,7 +10,7 @@ export function Header() {
   const {i18n} = useTranslation()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const pages = usePages()
+  const settings = useSettings()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,6 +20,8 @@ export function Header() {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  const menuItems = settings?.navigationMenu || []
 
   return (
     <header className="sticky top-0 z-20 bg-white shadow-sm">
@@ -36,18 +38,39 @@ export function Header() {
         {/* Menu desktop */}
         <nav className="hidden md:block text-gray-700">
           <ul className="flex justify-center gap-x-8">
-            {pages.map((page) => (
-              <NavItem
-                key={page._id}
-                to={
-                  page.slug?.FR?.current && page.slug.FR.current !== '/'
-                    ? `/${page.slug.FR.current}`
-                    : '/'
-                }
-              >
-                {i18n.language === 'FR' ? page.title.FR : page.title.EN}
-              </NavItem>
-            ))}
+            {menuItems.map((item) => {
+              const page = item.page
+              const slug = page.slug?.FR?.current !== '/' ? `/${page.slug.FR.current}` : '/'
+              const title = i18n.language === 'FR' ? page.title.FR : page.title.EN
+              
+              if (!item.children || item.children.length === 0) {
+                return (
+                  <NavItem key={page._id} to={slug}>
+                    {title}
+                  </NavItem>
+                )
+              }
+              
+              return (
+                <li key={page._id} className="group relative">
+                  <NavItem to={slug}>
+                    {title}
+                  </NavItem>
+                  <ul className="absolute left-0 mt-0 hidden group-hover:flex flex-col bg-white shadow-lg rounded-md py-2 min-w-max">
+                    {item.children.map((child) => {
+                      const childPage = child.page
+                      const childSlug = childPage.slug?.FR?.current !== '/' ? `/${childPage.slug.FR.current}` : '/'
+                      const childTitle = i18n.language === 'FR' ? childPage.title.FR : childPage.title.EN
+                      return (
+                        <NavItem key={childPage._id} to={childSlug}>
+                          {childTitle}
+                        </NavItem>
+                      )
+                    })}
+                  </ul>
+                </li>
+              )
+            })}
           </ul>
         </nav>
       </div>
@@ -86,19 +109,47 @@ export function Header() {
       {mobileMenuOpen && (
         <nav className="md:hidden border-t border-gray-200 bg-white">
           <ul className="flex flex-col gap-4 p-4">
-            {pages.map((page) => (
-              <NavItem
-                key={page._id}
-                to={
-                  page.slug?.FR?.current && page.slug.FR.current !== '/'
-                    ? `/${page.slug.FR.current}`
-                    : '/'
-                }
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {i18n.language === 'FR' ? page.title.FR : page.title.EN}
-              </NavItem>
-            ))}
+            {menuItems.map((item) => {
+              const page = item.page
+              const slug = page.slug?.FR?.current !== '/' ? `/${page.slug.FR.current}` : '/'
+              const title = i18n.language === 'FR' ? page.title.FR : page.title.EN
+              
+              if (!item.children || item.children.length === 0) {
+                return (
+                  <NavItem
+                    key={page._id}
+                    to={slug}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {title}
+                  </NavItem>
+                )
+              }
+              
+              return (
+                <li key={page._id} className="flex flex-col gap-2">
+                  <NavItem to={slug} onClick={() => setMobileMenuOpen(false)}>
+                    {title}
+                  </NavItem>
+                  <ul className="flex flex-col gap-2 pl-4 border-l-2 border-gray-200">
+                    {item.children.map((child) => {
+                      const childPage = child.page
+                      const childSlug = childPage.slug?.FR?.current !== '/' ? `/${childPage.slug.FR.current}` : '/'
+                      const childTitle = i18n.language === 'FR' ? childPage.title.FR : childPage.title.EN
+                      return (
+                        <NavItem
+                          key={childPage._id}
+                          to={childSlug}
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          {childTitle}
+                        </NavItem>
+                      )
+                    })}
+                  </ul>
+                </li>
+              )
+            })}
           </ul>
         </nav>
       )}

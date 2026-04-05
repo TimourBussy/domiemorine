@@ -1,36 +1,10 @@
 import {defineField, defineType} from 'sanity'
-import {DATASET, PROJECT_ID} from '../settings'
-
-// Helper to fetch the page count from Sanity API
-async function getNextPageOrder() {
-  try {
-    const response = await fetch(
-      `https://${PROJECT_ID}.api.sanity.io/v2026-03-28/data/query/${DATASET}?query=${encodeURIComponent(`count(*[_type == "page"])`)}`,
-    )
-    const data = await response.json()
-
-    if (data.result) {
-      return data.result + 1
-    }
-    return 1
-  } catch (error) {
-    console.error('Error fetching page count:', error)
-    return 1
-  }
-}
 
 export default defineType({
   name: 'page',
   title: 'Page',
   type: 'document',
   fields: [
-    defineField({
-      name: 'order',
-      title: 'Display order *',
-      type: 'number',
-      initialValue: () => getNextPageOrder(),
-      validation: (rule) => rule.required().min(1).error('Display order must be at least 1'),
-    }),
     defineField({
       name: 'title',
       title: 'Title *',
@@ -76,7 +50,7 @@ export default defineType({
       name: 'displayTitle',
       title: 'Display page title',
       type: 'boolean',
-      initialValue: true,
+      initialValue: false,
     }),
     defineField({
       name: 'body',
@@ -89,13 +63,6 @@ export default defineType({
         {type: 'socialLinks'},
       ],
     }),
-  ],
-  orderings: [
-    {
-      title: "Display Order",
-      name: 'orderAsc',
-      by: [{field: 'order', direction: 'asc'}],
-    },
   ],
   preview: {
     select: {

@@ -10,6 +10,7 @@ export interface ISocialMediaItem {
 export interface ISettings {
   _id: string
   socialMedias: ISocialMediaItem[]
+  navigationMenu?: IMenuItem[]
 }
 
 export interface IGroup {
@@ -95,7 +96,6 @@ export interface ISocialLinks {
 
 export interface Page {
   _id: string
-  order?: number
   title: {
     EN: string
     FR: string
@@ -121,10 +121,47 @@ export interface Page {
   body?: (ITitle | IParagraph | ICardMenu | IGroup | ISocialLinks)[]
 }
 
+export interface IMenuSubmItem {
+  page: {
+    _id: string
+    title: {
+      EN: string
+      FR: string
+    }
+    slug: {
+      FR: {
+        current: string
+      }
+      EN: {
+        current: string
+      }
+    }
+  }
+}
+
+export interface IMenuItem {
+  page: {
+    _id: string
+    title: {
+      EN: string
+      FR: string
+    }
+    slug: {
+      FR: {
+        current: string
+      }
+      EN: {
+        current: string
+      }
+    }
+  }
+  children?: IMenuSubmItem[]
+}
+
 export function usePages() {
   const [pages, setPages] = useState<Page[]>([])
   useEffect(() => {
-    sanityClient.fetch(`*[_type == "page"]|order(order asc, _createdAt asc){_id, order, title, slug { FR, EN }}`).then(setPages)
+    sanityClient.fetch(`*[_type == "page"]{_id, title, slug { FR, EN }}`).then(setPages)
   }, [])
   return pages
 }
@@ -254,6 +291,20 @@ export function useSettings() {
             name,
             icon,
             url
+          },
+          navigationMenu[]{
+            page->{
+              _id,
+              title,
+              slug
+            },
+            children[]{
+              page->{
+                _id,
+                title,
+                slug
+              }
+            }
           }
         }`,
       )

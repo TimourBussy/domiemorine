@@ -14,6 +14,77 @@ export default defineType({
       hidden: true,
     }),
     defineField({
+      name: 'navigationMenu',
+      title: 'Navigation Menu',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          name: 'menuItem',
+          title: 'Menu Item',
+          fields: [
+            {
+              name: 'page',
+              title: 'Page',
+              type: 'reference',
+              to: [{type: 'page'}],
+              validation: (rule) => rule.required(),
+            },
+            {
+              name: 'children',
+              title: 'Submenu Items',
+              type: 'array',
+              of: [
+                {
+                  type: 'object',
+                  name: 'submenuItem',
+                  title: 'Submenu Item',
+                  fields: [
+                    {
+                      name: 'page',
+                      title: 'Page',
+                      type: 'reference',
+                      to: [{type: 'page'}],
+                      validation: (rule) => rule.required(),
+                    },
+                  ],
+                  preview: {
+                    select: {
+                      title: 'page.title',
+                    },
+                    prepare(selection) {
+                      return {
+                        title:
+                          [selection.title?.FR || '', selection.title?.EN || '']
+                            .filter(Boolean)
+                            .join(' / ') || 'Unnamed Page',
+                      }
+                    },
+                  },
+                },
+              ],
+            },
+          ],
+          preview: {
+            select: {
+              title: 'page.title',
+              childCount: 'children.length',
+            },
+            prepare(selection) {
+              return {
+                title:
+                  [selection.title?.FR || '', selection.title?.EN || '']
+                    .filter(Boolean)
+                    .join(' / ') || 'Unnamed Page',
+                subtitle: selection.childCount
+                  && `${selection.childCount} submenu items`
+              }
+            },
+          },
+        },
+      ],
+    }),
+    defineField({
       name: 'socialMedias',
       title: 'Social Media Networks',
       type: 'array',
