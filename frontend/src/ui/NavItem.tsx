@@ -1,23 +1,25 @@
-import { NavLink } from "react-router-dom";
+import {NavLink} from 'react-router-dom'
 
 export function NavItem({
   to,
   children,
   subItems,
   onClick,
+  mobileSubmenu,
 }: {
-  to: string;
-  children: React.ReactNode;
-  subItems?: { to: string; label: string }[];
-  onClick?: () => void;
+  to: string
+  children: React.ReactNode
+  subItems?: {to: string; label: string}[]
+  onClick?: () => void
+  mobileSubmenu?: React.ReactNode
 }) {
   return (
     <li className="group relative">
       <NavLink
         to={to}
         onClick={onClick}
-        className={({ isActive }) =>
-          `flex gap-1 ${isActive ? "font-semibold text-amber-700" : "hover:text-amber-700 transition-colors duration-200"}`
+        className={({isActive}) =>
+          `flex gap-1 py-4 px-2 ${isActive ? 'font-semibold text-amber-700' : 'hover:text-amber-700 transition-colors duration-200'}`
         }
         end
       >
@@ -31,11 +33,7 @@ export function NavItem({
             viewBox="0 0 24 24"
             aria-hidden="true"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M19 9l-7 7-7-7"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
           </svg>
         )}
       </NavLink>
@@ -48,6 +46,7 @@ export function NavItem({
           ))}
         </ul>
       )}
+      {mobileSubmenu}
     </li>
-  );
+  )
 }
