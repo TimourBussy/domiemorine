@@ -23,6 +23,10 @@ export function Header() {
 
   const menuItems = settings?.navigationMenu || []
 
+  const getSlug = (page: any) => (page.slug?.FR?.current !== '/' ? `/${page.slug.FR.current}` : '/')
+
+  const getTitle = (page: any) => (i18n.language === 'FR' ? page.title.FR : page.title.EN)
+
   return (
     <header className="sticky top-0 z-20 bg-white shadow-sm transition-all duration-500">
       <div className="relative py-4 text-center">
@@ -38,39 +42,41 @@ export function Header() {
         {/* Menu desktop */}
         <nav className="hidden md:block text-gray-700">
           <ul className="flex justify-center gap-x-8">
-            {menuItems.map((item) => {
-              const page = item.page
-              const slug = page.slug?.FR?.current !== '/' ? `/${page.slug.FR.current}` : '/'
-              const title = i18n.language === 'FR' ? page.title.FR : page.title.EN
+            {menuItems
+              .filter((item) => item.page)
+              .map((item) => {
+                const page = item.page
+                const title = getTitle(page)
 
-              if (!item.children || item.children.length === 0) {
+                const subItems =
+                  item.children?.flatMap((child: any) => {
+                    if (child._type === 'ensemblesListItem') {
+                      return (settings?.ensembles || []).map((ensemble) => ({
+                        to: `/ensembles/${ensemble.slug.current}`,
+                        label: ensemble.name,
+                      }))
+                    }
+                    if (child._type === 'submenuItem' && child.page) {
+                      return [
+                        {
+                          to: getSlug(child.page),
+                          label: getTitle(child.page),
+                        },
+                      ]
+                    }
+                    return []
+                  }) || []
+
                 return (
-                  <NavItem key={page._id} to={slug}>
+                  <NavItem
+                    key={page._id}
+                    to={getSlug(page)}
+                    subItems={subItems.length > 0 ? subItems : undefined}
+                  >
                     {title}
                   </NavItem>
                 )
-              }
-
-              return (
-                <li key={page._id} className="group relative">
-                  <NavItem to={slug}>{title}</NavItem>
-                  <ul className="absolute left-0 mt-0 hidden group-hover:flex flex-col bg-white shadow-lg rounded-md py-2 min-w-max">
-                    {item.children.map((child) => {
-                      const childPage = child.page
-                      const childSlug =
-                        childPage.slug?.FR?.current !== '/' ? `/${childPage.slug.FR.current}` : '/'
-                      const childTitle =
-                        i18n.language === 'FR' ? childPage.title.FR : childPage.title.EN
-                      return (
-                        <NavItem key={childPage._id} to={childSlug}>
-                          {childTitle}
-                        </NavItem>
-                      )
-                    })}
-                  </ul>
-                </li>
-              )
-            })}
+              })}
           </ul>
         </nav>
 
@@ -109,58 +115,44 @@ export function Header() {
       {mobileMenuOpen && (
         <>
           <div className="fixed inset-0 z-10" onClick={() => setMobileMenuOpen(false)} />
-          <nav className="md:hidden relative z-20 border-t border-gray-200 bg-white">
-            <ul className="flex flex-col p-0">
-              {menuItems.map((item) => {
-                const page = item.page
-                const slug = page.slug?.FR?.current !== '/' ? `/${page.slug.FR.current}` : '/'
-                const title = i18n.language === 'FR' ? page.title.FR : page.title.EN
+          <nav className="md:hidden relative z-20 border-t text-gray-700 border-gray-200 bg-white">
+            <ul className="flex flex-col">
+              {menuItems
+                .filter((item) => item.page)
+                .map((item) => {
+                  const page = item.page
+                  const slug = getSlug(page)
 
-                if (!item.children || item.children.length === 0) {
+                  const subItems =
+                    item.children?.flatMap((child: any) => {
+                      if (child._type === 'ensemblesListItem') {
+                        return (settings?.ensembles || []).map((ensemble) => ({
+                          to: `/ensembles/${ensemble.slug.current}`,
+                          label: ensemble.name,
+                        }))
+                      }
+                      if (child._type === 'submenuItem' && child.page) {
+                        return [
+                          {
+                            to: getSlug(child.page),
+                            label: getTitle(child.page),
+                          },
+                        ]
+                      }
+                      return []
+                    }) || []
+
                   return (
                     <NavItem
                       key={page._id}
                       to={slug}
                       onClick={() => setMobileMenuOpen(false)}
-                      className="py-4"
+                      subItems={subItems.length > 0 ? subItems : undefined}
                     >
-                      {title}
+                      {getTitle(page)}
                     </NavItem>
                   )
-                }
-
-                return (
-                  <NavItem
-                    key={page._id}
-                    to={slug}
-                    onClick={() => setMobileMenuOpen(false)}
-                    mobileSubmenu={
-                      <ul className="flex flex-col bg-gray-50">
-                        {item.children.map((child) => {
-                          const childPage = child.page
-                          const childSlug =
-                            childPage.slug?.FR?.current !== '/'
-                              ? `/${childPage.slug.FR.current}`
-                              : '/'
-                          const childTitle =
-                            i18n.language === 'FR' ? childPage.title.FR : childPage.title.EN
-                          return (
-                            <NavItem
-                              key={childPage._id}
-                              to={childSlug}
-                              onClick={() => setMobileMenuOpen(false)}
-                            >
-                              {childTitle}
-                            </NavItem>
-                          )
-                        })}
-                      </ul>
-                    }
-                  >
-                    {title}
-                  </NavItem>
-                )
-              })}
+                })}
             </ul>
           </nav>
         </>

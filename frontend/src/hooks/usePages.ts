@@ -109,8 +109,9 @@ export interface Page {
   body?: (IGroup | ITitle | IParagraph | ICardMenu | ISocialLinks | IEnsembles)[]
 }
 
-export interface IMenuSubmItem {
-  page: {
+export interface IMenuSubItem {
+  _type: 'submenuItem' | 'ensemblesListItem'
+  page?: {
     _id: string
     title: {EN: string; FR: string}
     slug: {
@@ -129,7 +130,7 @@ export interface IMenuItem {
       EN: {current: string}
     }
   }
-  children?: IMenuSubmItem[]
+  children?: IMenuSubItem[]
 }
 
 export function usePages() {
@@ -228,6 +229,7 @@ export function useSettings() {
           navigationMenu[]{
             page->{_id, title, slug},
             children[]{
+              _type,
               page->{_id, title, slug}
             }
           },

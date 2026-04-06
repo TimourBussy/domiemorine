@@ -1,6 +1,9 @@
 import {useSettings} from '../hooks/usePages'
 import {useTranslation} from 'react-i18next'
 import {getIcon} from '../../../sanity/lib/iconsRegistry'
+import {Title} from '../ui/Title'
+import { Paragraph } from '../ui/Paragraph'
+import { FiExternalLink } from 'react-icons/fi'
 
 export function EnsemblePage({slug}: {slug: string}) {
   const settings = useSettings()
@@ -11,8 +14,8 @@ export function EnsemblePage({slug}: {slug: string}) {
   if (!ensemble) return <div className="flex-1" />
 
   return (
-    <main className="flex-1 max-w-4xl mx-auto px-6 mt-16 mb-16 flex flex-col gap-12">
-      <h2 className="text-4xl font-semibold text-center">{ensemble.name}</h2>
+    <main className="flex-1 max-w-4xl mx-auto px-8 mt-16 mb-20 flex flex-col gap-12">
+      <Title level={2}>{ensemble.name}</Title>
 
       <img
         src={ensemble.image.asset.url}
@@ -21,17 +24,17 @@ export function EnsemblePage({slug}: {slug: string}) {
       />
 
       {ensemble.desc && (
-        <p className="text-gray-700 text-lg leading-relaxed">
+        <Paragraph size="large">
           {i18n.language === 'FR' ? ensemble.desc.FR : ensemble.desc.EN}
-        </p>
+        </Paragraph>
       )}
 
       {ensemble.socialMedias?.length && (
         <div className="flex flex-col gap-4">
-          <h3 className="text-xl font-semibold">
+          <Title level={5}>
             {i18n.language === 'FR' ? "Suivez l'ensemble" : 'Follow the ensemble'}
-          </h3>
-          <div className="flex flex-col gap-3">
+          </Title>
+          <div className="flex gap-6 justify-center text-amber-700 hover:text-amber-800">
             {ensemble.socialMedias.map((social, index) => {
               const IconComponent = getIcon(social.icon)
               return (
@@ -39,10 +42,11 @@ export function EnsemblePage({slug}: {slug: string}) {
                   key={index}
                   href={social.url}
                   target="_blank"
-                  className="flex items-center gap-3 hover:text-amber-700 transition-colors"
+                  className="flex items-center gap-2 transition-colors"
                 >
-                  {IconComponent && <IconComponent size={24} />}
+                  {IconComponent && <IconComponent size={20} />}
                   <span>{social.name}</span>
+                  <FiExternalLink />
                 </a>
               )
             })}

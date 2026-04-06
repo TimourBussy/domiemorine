@@ -1,23 +1,9 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-const resources = {
-  EN: {
-    translation: {
-      
-    }
-  },
-  FR: {
-    translation: {
-      
-    }
-  }
-};
-
 i18n
   .use(initReactI18next)
   .init({
-    resources,
     lng: 'FR',
     fallbackLng: 'FR',
     interpolation: {
