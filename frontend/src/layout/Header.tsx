@@ -24,12 +24,12 @@ export function Header() {
   const menuItems = settings?.navigationMenu || []
 
   return (
-    <header className="sticky top-0 z-20 bg-white shadow-sm">
-      <div className="relative pt-4 sm:pb-4 text-center">
+    <header className="sticky top-0 z-20 bg-white shadow-sm transition-all duration-500">
+      <div className="relative py-4 text-center">
         <Link to="/">
           <Title
             level={1}
-            className={`sm:mb-4 cursor-pointer inline-block transition-all duration-500 ${scrolled ? 'scale-65' : 'scale-100'} origin-center`}
+            className={`sm:mb-4 cursor-pointer inline-block transition-all duration-500 ${scrolled ? 'text-2xl sm:text-3xl' : 'text-4xl sm:text-5xl'}`}
           >
             Domi Emorine
           </Title>
@@ -75,7 +75,7 @@ export function Header() {
         </nav>
 
         {/* Lang & Hamburger */}
-        <div className="absolute top-0 bottom-0 right-6 flex flex-row-reverse items-center gap-2">
+        <div className="sm:absolute top-0 bottom-0 right-6 flex flex-row-reverse items-center justify-center gap-2">
           {/* Hamburger (mobile) */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -118,7 +118,12 @@ export function Header() {
 
                 if (!item.children || item.children.length === 0) {
                   return (
-                    <NavItem key={page._id} to={slug} onClick={() => setMobileMenuOpen(false)}>
+                    <NavItem
+                      key={page._id}
+                      to={slug}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="py-4"
+                    >
                       {title}
                     </NavItem>
                   )

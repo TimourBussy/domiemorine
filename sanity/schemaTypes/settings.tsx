@@ -25,7 +25,7 @@ export default defineType({
           fields: [
             {
               name: 'page',
-              title: 'Page',
+              title: 'Page *',
               type: 'reference',
               to: [{type: 'page'}],
               validation: (rule) => rule.required(),
@@ -38,20 +38,18 @@ export default defineType({
                 {
                   type: 'object',
                   name: 'submenuItem',
-                  title: 'Submenu Item',
+                  title: 'Page',
                   fields: [
                     {
                       name: 'page',
-                      title: 'Page',
+                      title: 'Page *',
                       type: 'reference',
                       to: [{type: 'page'}],
                       validation: (rule) => rule.required(),
                     },
                   ],
                   preview: {
-                    select: {
-                      title: 'page.title',
-                    },
+                    select: {title: 'page.title'},
                     prepare(selection) {
                       return {
                         title:
@@ -62,22 +60,45 @@ export default defineType({
                     },
                   },
                 },
+                {
+                  type: 'object',
+                  name: 'ensemblesListItem',
+                  title: 'Ensembles List',
+                  fields: [
+                    {
+                      name: 'placeholder',
+                      type: 'string',
+                      hidden: true,
+                    },
+                  ],
+                  preview: {
+                    prepare() {
+                      return {title: 'Ensembles List'}
+                    },
+                  },
+                },
               ],
             },
           ],
           preview: {
             select: {
               title: 'page.title',
-              childCount: 'children.length',
+              child0: 'children[0]._type',
+              child1: 'children[1]._type',
+              child2: 'children[2]._type',
             },
             prepare(selection) {
+              const childCount = [selection.child0, selection.child1, selection.child2].filter(
+                Boolean,
+              ).length
               return {
                 title:
                   [selection.title?.FR || '', selection.title?.EN || '']
                     .filter(Boolean)
                     .join(' / ') || 'Unnamed Page',
-                subtitle: selection.childCount
-                  && `${selection.childCount} submenu items`
+                subtitle: childCount
+                  ? `${childCount} submenu item${childCount > 1 ? 's' : ''}`
+                  : ''
               }
             },
           },
@@ -94,13 +115,13 @@ export default defineType({
           fields: [
             {
               name: 'name',
-              title: 'Name',
+              title: 'Name *',
               type: 'string',
               validation: (rule) => rule.required(),
             },
             {
               name: 'icon',
-              title: 'Icon',
+              title: 'Icon *',
               type: 'string',
               validation: (rule) => rule.required(),
               components: {
@@ -109,7 +130,7 @@ export default defineType({
             },
             {
               name: 'url',
-              title: 'URL',
+              title: 'URL *',
               type: 'string',
               validation: (rule) => rule.required(),
             },
@@ -126,6 +147,135 @@ export default defineType({
                 title: name || 'Unnamed',
                 subtitle: url,
                 media: IconComponent && (() => <IconComponent />),
+              }
+            },
+          },
+        },
+      ],
+    }),
+    defineField({
+      name: 'ensembles',
+      title: 'Ensembles',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              name: 'image',
+              title: 'Image *',
+              type: 'image',
+              validation: (rule) => rule.required(),
+            },
+            {
+              name: 'name',
+              title: 'Name *',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            },
+            {
+              name: 'previewDesc',
+              title: 'Preview Description',
+              type: 'object',
+              fields: [
+                {
+                  name: 'FR',
+                  title: 'Français',
+                  type: 'string',
+                },
+                {
+                  name: 'EN',
+                  title: 'English',
+                  type: 'string',
+                },
+              ],
+            },
+            {
+              name: 'slug',
+              title: 'Slug *',
+              type: 'slug',
+              options: {
+                source: (_doc: any, context: any) => context.parent?.name || '',
+              },
+              validation: (rule) => rule.required(),
+            },
+            {
+              name: 'desc',
+              title: 'Description',
+              type: 'object',
+              fields: [
+                {
+                  name: 'FR',
+                  title: 'Français',
+                  type: 'text',
+                },
+                {
+                  name: 'EN',
+                  title: 'English',
+                  type: 'text',
+                },
+              ],
+            },
+            {
+              name: 'socialMedias',
+              title: 'Ensemble Social Medias',
+              type: 'array',
+              of: [
+                {
+                  type: 'object',
+                  fields: [
+                    {
+                      name: 'name',
+                      title: 'Name *',
+                      type: 'string',
+                      validation: (rule) => rule.required(),
+                    },
+                    {
+                      name: 'icon',
+                      title: 'Icon *',
+                      type: 'string',
+                      validation: (rule) => rule.required(),
+                      components: {
+                        input: IconSelector,
+                      },
+                    },
+                    {
+                      name: 'url',
+                      title: 'URL *',
+                      type: 'string',
+                      validation: (rule) => rule.required(),
+                    },
+                  ],
+                  preview: {
+                    select: {
+                      name: 'name',
+                      icon: 'icon',
+                      url: 'url',
+                    },
+                    prepare({name, icon, url}) {
+                      const IconComponent = icon ? getIcon(icon) : null
+                      return {
+                        title: name || 'Unnamed',
+                        subtitle: url,
+                        media: IconComponent && (() => <IconComponent />),
+                      }
+                    },
+                  },
+                },
+              ],
+            },
+          ],
+          preview: {
+            select: {
+              name: 'name',
+              image: 'image',
+              previewDesc: 'previewDesc',
+            },
+            prepare({name, image, previewDesc}) {
+              return {
+                title: name || 'Unnamed',
+                subtitle: previewDesc?.FR || previewDesc?.EN || '',
+                media: image,
               }
             },
           },

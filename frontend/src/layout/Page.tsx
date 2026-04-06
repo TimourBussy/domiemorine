@@ -3,10 +3,22 @@ import {usePage} from '../hooks/usePages'
 import {HeroImage} from '../ui/HeroImage'
 import {Block} from '../ui/Block'
 import {Title} from '../ui/Title'
+import {useEffect} from 'react'
 
 export function Page({slug}: {slug: string}) {
   const page = usePage(slug)
   const {i18n} = useTranslation()
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      })
+    }, 100)
+    
+    return () => clearTimeout(timer)
+  }, [slug])
 
   if (!page) return null
 

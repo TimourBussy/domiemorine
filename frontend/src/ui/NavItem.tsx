@@ -1,25 +1,27 @@
-import {NavLink} from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 
 export function NavItem({
   to,
   children,
   subItems,
   onClick,
+  className,
   mobileSubmenu,
 }: {
   to: string
   children: React.ReactNode
-  subItems?: {to: string; label: string}[]
+  subItems?: { to: string; label: string }[]
   onClick?: () => void
+  className?: string
   mobileSubmenu?: React.ReactNode
 }) {
   return (
-    <li className="group relative">
+    <li className={className || 'group relative'}>
       <NavLink
         to={to}
         onClick={onClick}
-        className={({isActive}) =>
-          `flex gap-1 py-4 px-2 ${isActive ? 'font-semibold text-amber-700' : 'hover:text-amber-700 transition-colors duration-200'}`
+        className={({ isActive }) =>
+          `flex gap-1 px-2 ${isActive ? 'font-semibold text-amber-700' : 'hover:text-amber-700 transition-colors duration-200'}`
         }
         end
       >

@@ -61,6 +61,7 @@ export default defineType({
         {type: 'paragraph'},
         {type: 'cardMenu'},
         {type: 'socialLinks'},
+        {type: 'ensembles'},
       ],
     }),
   ],

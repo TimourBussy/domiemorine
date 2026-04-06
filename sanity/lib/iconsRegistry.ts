@@ -1,44 +1,28 @@
 // Import all icon sets from react-icons
-import * as FaIcons from 'react-icons/fa'
 import * as FiIcons from 'react-icons/fi'
 
 // Combine all icons into a single object
-const allIconCollections = {
-  ...FaIcons,
+const ALL_ICON_COLLECTIONS = {
   ...FiIcons,
 }
 
 // Filter to get only icon components (functions/classes)
-export const iconsRegistry = Object.entries(allIconCollections)
+export const iconsRegistry = Object.entries(ALL_ICON_COLLECTIONS)
   .filter(([, value]) => typeof value === 'function')
   .map(([name]) => name)
   .sort()
 
 export function getIcon(iconName: string) {
-  return allIconCollections[iconName as keyof typeof allIconCollections]
+  return ALL_ICON_COLLECTIONS[iconName as keyof typeof ALL_ICON_COLLECTIONS]
 }
 
 // Popular icons for social media and web (loaded by default)
 export const socialIcons = [
-  'FaFacebook',
-  'FaFacebookF',
   'FiFacebook',
-  'FaInstagram',
   'FiInstagram',
-  'FaTwitter',
   'FiTwitter',
-  'FaLinkedin',
-  'FaLinkedinIn',
   'FiLinkedin',
-  'FaTiktok',
-  'FaYoutube',
   'FiYoutube',
-  'FaDiscord',
-  'FaTwitch',
   'FiTwitch',
-  'FaVimeo',
-  'FaDailymotion',
-  'FaGlobe',
   'FiGlobe',
 ]
-

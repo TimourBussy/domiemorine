@@ -1,13 +1,15 @@
-import {usePages} from './hooks/usePages'
+import {usePages, useSettings} from './hooks/usePages'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import {Header} from './layout/Header'
 import {Page} from './layout/Page'
 import {Footer} from './layout/Footer'
 import {ScrollToTop} from './ui/ScrollToTop'
 import {useTranslation} from 'react-i18next'
+import { EnsemblePage } from './layout/EnsemblePage'
 
 export default function App() {
   const pages = usePages()
+  const settings = useSettings()
   const {i18n} = useTranslation()
 
   return (
@@ -48,6 +50,13 @@ export default function App() {
               </main>
             }
           />
+          {settings?.ensembles?.map((ensemble) => (
+            <Route
+              key={ensemble.slug.current}
+              path={`/ensembles/${ensemble.slug.current}`}
+              element={<EnsemblePage slug={ensemble.slug.current} />}
+            />
+          ))}
         </Routes>
         <Footer />
         <ScrollToTop />
