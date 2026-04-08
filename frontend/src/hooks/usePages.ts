@@ -61,6 +61,19 @@ export interface IParagraph {
   marginLeft?: number
 }
 
+export interface IImg {
+  _type: 'img'
+  _key: string
+  src: {asset: {url: string}}
+  alt?: {FR?: string; EN?: string}
+  dimensionType?: 'width' | 'height'
+  dimension?: number
+  marginTop?: number
+  marginRight?: number
+  marginBottom?: number
+  marginLeft?: number
+}
+
 export interface ICardMenuItem {
   title: {FR: string; EN: string}
   description: {FR: string; EN: string}
@@ -106,7 +119,7 @@ export interface Page {
     altFr?: string
     altEn?: string
   }
-  body?: (IGroup | ITitle | IParagraph | ICardMenu | ISocialLinks | IEnsembles)[]
+  body?: (IGroup | ITitle | IParagraph | ICardMenu | ISocialLinks | IEnsembles | IImg)[]
 }
 
 export interface IMenuSubItem {
@@ -141,6 +154,37 @@ export function usePages() {
   return pages
 }
 
+const BLOCK_QUERY = `
+  _type, _key,
+  _type == "title" => {
+    content, level, colored,
+    marginTop, marginRight, marginBottom, marginLeft
+  },
+  _type == "paragraph" => {
+    content, size,
+    marginTop, marginRight, marginBottom, marginLeft
+  },
+  _type == "img" => {
+    src{ asset->{ url } }, alt,
+    dimensionType, dimension,
+    marginTop, marginRight, marginBottom, marginLeft
+  },
+  _type == "cardMenu" => {
+    cards[]{
+      title, description,
+      destinationPage->{ slug { FR, EN } }
+    },
+    marginTop, marginRight, marginBottom, marginLeft
+  },
+  _type == "socialLinks" => {
+    size, colored,
+    marginTop, marginRight, marginBottom, marginLeft
+  },
+  _type == "ensembles" => {
+    _type, _key
+  }
+`
+
 export function usePage(slug: string) {
   const [page, setPage] = useState<Page | null>(null)
   useEffect(() => {
@@ -157,56 +201,11 @@ export function usePage(slug: string) {
           },
           displayTitle,
           body[]{
-            _type,
-            _key,
-            _type == "title" => {
-              content, level, colored,
-              marginTop, marginRight, marginBottom, marginLeft
-            },
-            _type == "paragraph" => {
-              content, size,
-              marginTop, marginRight, marginBottom, marginLeft
-            },
-            _type == "cardMenu" => {
-              cards[]{
-                title, description,
-                destinationPage->{ slug { FR, EN } }
-              },
-              marginTop, marginRight, marginBottom, marginLeft
-            },
-            _type == "socialLinks" => {
-              size, colored,
-              marginTop, marginRight, marginBottom, marginLeft
-            },
-            _type == "ensembles" => {
-              _type, _key
-            },
+            ${BLOCK_QUERY},
             _type == "group" => {
               marginTop, marginRight, marginBottom, marginLeft,
               blocks[]{
-                _type, _key,
-                _type == "title" => {
-                  content, level, colored,
-                  marginTop, marginRight, marginBottom, marginLeft
-                },
-                _type == "paragraph" => {
-                  content, size,
-                  marginTop, marginRight, marginBottom, marginLeft
-                },
-                _type == "cardMenu" => {
-                  cards[]{
-                    title, description,
-                    destinationPage->{ slug { FR, EN } }
-                  },
-                  marginTop, marginRight, marginBottom, marginLeft
-                },
-                _type == "socialLinks" => {
-                  size, colored,
-                  marginTop, marginRight, marginBottom, marginLeft
-                },
-                _type == "ensembles" => {
-                  _type, _key
-                }
+                ${BLOCK_QUERY}
               }
             }
           }

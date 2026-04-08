@@ -41,7 +41,7 @@ export function Header() {
 
         {/* Menu desktop */}
         <nav className="hidden md:block text-gray-700">
-          <ul className="flex justify-center gap-x-8">
+          <ul className="flex justify-center gap-x-4">
             {menuItems
               .filter((item) => item.page)
               .map((item) => {

@@ -20,7 +20,7 @@ export function EnsemblePage({slug}: {slug: string}) {
       <img
         src={ensemble.image.asset.url}
         alt={ensemble.name}
-        className="w-full object-cover rounded-lg"
+        className="mx-auto w-75/100 object-cover rounded-lg"
       />
 
       {ensemble.desc && (

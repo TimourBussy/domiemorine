@@ -11,10 +11,12 @@ import type {
   ISocialLinks,
   IGroup,
   IEnsembles,
+  IImg,
 } from '../hooks/usePages'
 import {Ensembles} from './Ensembles'
+import {Image} from './Image'
 
-export type TBlock = IGroup | ITitle | IParagraph | ICardMenu | ISocialLinks | IEnsembles
+export type TBlock = IGroup | ITitle | IParagraph | IImg | ICardMenu | ISocialLinks | IEnsembles
 
 export function Block({block}: {block: TBlock}) {
   const {i18n} = useTranslation()
@@ -50,6 +52,16 @@ export function Block({block}: {block: TBlock}) {
       <Paragraph key={block._key} size={block.size} className={marginClasses}>
         {i18n.language === 'FR' ? block.content.FR : block.content.EN}
       </Paragraph>
+    )
+  else if (block._type === 'img')
+    return (
+      <Image
+        key={block._key}
+        src={block.src.asset.url}
+        alt={i18n.language === 'FR' ? block.alt?.FR || '' : block.alt?.EN || ''}
+        width={block.dimensionType === 'width' ? block.dimension : undefined}
+        height={block.dimensionType === 'height' ? block.dimension : undefined}
+      />
     )
   else if (block._type === 'cardMenu')
     return (

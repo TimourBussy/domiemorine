@@ -6,6 +6,7 @@ import group from './group'
 import socialLinks from './socialLinks'
 import settings from './settings'
 import ensembles from './ensembles'
+import image from './image'
 
 export const schemaTypes = [
   page,
@@ -16,4 +17,5 @@ export const schemaTypes = [
   socialLinks,
   settings,
   ensembles,
+  image,
 ]

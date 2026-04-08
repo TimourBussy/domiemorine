@@ -1,6 +1,7 @@
 import {defineField, defineType} from 'sanity'
 import {IconSelector} from '../components/IconSelector'
 import {getIcon} from '../lib/iconsRegistry'
+import {ScheduleCalendarInput} from '../components/ScheduleCalendar'
 
 export default defineType({
   name: 'settings',
@@ -98,7 +99,7 @@ export default defineType({
                     .join(' / ') || 'Unnamed Page',
                 subtitle: childCount
                   ? `${childCount} submenu item${childCount > 1 ? 's' : ''}`
-                  : ''
+                  : '',
               }
             },
           },
@@ -279,6 +280,39 @@ export default defineType({
               }
             },
           },
+        },
+      ],
+    }),
+    defineField({
+      name: 'schedule',
+      title: 'Schedule',
+      type: 'object',
+      components: {
+        input: ScheduleCalendarInput,
+      },
+      fields: [
+        {
+          name: 'events',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                {name: 'key', type: 'string'},
+                {
+                  name: 'title',
+                  type: 'object',
+                  fields: [
+                    {name: 'FR', title: 'Français', type: 'string'},
+                    {name: 'EN', title: 'English', type: 'string'},
+                  ],
+                },
+                {name: 'date', type: 'string'},
+                {name: 'time', type: 'string'},
+                {name: 'location', type: 'string'},
+              ],
+            },
+          ],
         },
       ],
     }),

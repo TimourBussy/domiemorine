@@ -59,6 +59,7 @@ export default defineType({
         {type: 'group'},
         {type: 'title'},
         {type: 'paragraph'},
+        {type: 'img'},
         {type: 'cardMenu'},
         {type: 'socialLinks'},
         {type: 'ensembles'},

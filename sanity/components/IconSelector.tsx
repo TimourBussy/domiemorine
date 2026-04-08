@@ -1,6 +1,6 @@
 import {useState, useMemo} from 'react'
 import {set, unset} from 'sanity'
-import {TextInput, Button, Flex, Box, Text} from '@sanity/ui'
+import {TextInput, Button, Flex, Box, Text, Grid} from '@sanity/ui'
 import {getIcon, iconsRegistry, socialIcons} from '../lib/iconsRegistry'
 
 export function IconSelector(props: any) {
@@ -66,15 +66,14 @@ export function IconSelector(props: any) {
           </Flex>
         )}
 
-        <Box
+        <Grid
+          gap={2}
+          padding={4}
           style={{
-            display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(60px, 1fr))',
-            gap: '0.5rem',
             maxHeight: '400px',
             overflowY: 'auto',
             border: '1px solid #e0e0e0',
-            padding: '1rem',
             borderRadius: '4px',
           }}
         >
@@ -113,7 +112,7 @@ export function IconSelector(props: any) {
           ) : (
             <Box style={{gridColumn: '1 / -1', padding: '1rem', color: '#999'}}>No icons found</Box>
           )}
-        </Box>
+        </Grid>
 
         <Text size={0}>
           Showing {filteredIcons.length} icon{filteredIcons.length !== 1 ? 's' : ''}
