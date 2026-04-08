@@ -1,6 +1,6 @@
 import {useState, useMemo} from 'react'
 import {set, unset} from 'sanity'
-import {TextInput, Button, Flex, Box, Text, Grid} from '@sanity/ui'
+import {TextInput, Button, Flex, Box, Text, Grid, Card} from '@sanity/ui'
 import {getIcon, iconsRegistry, socialIcons} from '../lib/iconsRegistry'
 
 export function IconSelector(props: any) {
@@ -49,7 +49,7 @@ export function IconSelector(props: any) {
             padding={4}
             align="center"
             gap={4}
-            style={{border: '1px solid #ccc', borderRadius: '4px'}}
+            style={{border: '1px solid var(--card-border-color)', borderRadius: '4px'}}
           >
             {IconComponent && <IconComponent size={32} />}
             <Box>
@@ -73,7 +73,7 @@ export function IconSelector(props: any) {
             gridTemplateColumns: 'repeat(auto-fill, minmax(60px, 1fr))',
             maxHeight: '400px',
             overflowY: 'auto',
-            border: '1px solid #e0e0e0',
+            border: '1px solid var(--card-border-color)',
             borderRadius: '4px',
           }}
         >
@@ -81,7 +81,8 @@ export function IconSelector(props: any) {
             filteredIcons.map((iconName) => {
               const Icon = getIcon(iconName)
               return (
-                <button
+                <Card
+                  as="button"
                   key={iconName}
                   onClick={() => handleSelect(iconName)}
                   title={iconName}
@@ -89,28 +90,22 @@ export function IconSelector(props: any) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    padding: '0.5rem',
-                    border: value === iconName ? '2px solid #0066cc' : '1px solid #ddd',
+                    height: 40,
+                    border:
+                      value === iconName
+                        ? '2px solid var(--card-focus-ring-color)'
+                        : '1px solid var(--card-border-color)',
                     borderRadius: '4px',
                     cursor: 'pointer',
-                    backgroundColor: value === iconName ? '#f0f7ff' : 'transparent',
                     transition: 'all 0.2s',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor =
-                      value === iconName ? '#f0f7ff' : '#f5f5f5'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor =
-                      value === iconName ? '#f0f7ff' : 'transparent'
                   }}
                 >
                   {Icon && <Icon size={24} />}
-                </button>
+                </Card>
               )
             })
           ) : (
-            <Box style={{gridColumn: '1 / -1', padding: '1rem', color: '#999'}}>No icons found</Box>
+            <Text style={{gridColumn: '1 / -1', padding: '1rem', color: '#999'}}>No icons found</Text>
           )}
         </Grid>
 

@@ -2,7 +2,7 @@ import {useCallback} from 'react'
 import {set, unset} from 'sanity'
 import type {ObjectInputProps} from 'sanity'
 import {useState} from 'react'
-import {Text, Flex, Box, Grid, Heading} from '@sanity/ui'
+import {Text, Flex, Box, Grid, Heading, Card, Button, TextInput} from '@sanity/ui'
 
 interface ScheduleEvent {
   _key: string
@@ -92,10 +92,11 @@ export function ScheduleCalendarInput(props: ObjectInputProps) {
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
   return (
-    <Box style={{fontFamily: 'sans-serif', fontSize: 14}}>
+    <Card style={{fontFamily: 'sans-serif', fontSize: 14}}>
       {/* Header */}
       <Flex align="center" gap={3} style={{marginBottom: 16}}>
-        <button
+        <Button
+          tone="primary"
           onClick={() => {
             if (currentMonth === 0) {
               setCurrentMonth(11)
@@ -105,11 +106,12 @@ export function ScheduleCalendarInput(props: ObjectInputProps) {
           style={btnStyle}
         >
           ‹
-        </button>
+        </Button>
         <strong style={{minWidth: 160, textAlign: 'center'}}>
           {MONTHS[currentMonth]} {currentYear}
         </strong>
-        <button
+        <Button
+          tone="primary"
           onClick={() => {
             if (currentMonth === 11) {
               setCurrentMonth(0)
@@ -119,57 +121,45 @@ export function ScheduleCalendarInput(props: ObjectInputProps) {
           style={btnStyle}
         >
           ›
-        </button>
+        </Button>
         <Flex gap={2} style={{marginLeft: 'auto'}}>
-          <button
+          <Button
+            tone={view === 'month' ? 'primary' : 'neutral'}
             onClick={() => setView('month')}
-            style={{
-              ...btnStyle,
-              background: view === 'month' ? '#0070f3' : '#eee',
-              color: view === 'month' ? '#e4e5e9' : '#333',
-            }}
+            style={btnStyle}
           >
             Month
-          </button>
-          <button
+          </Button>
+          <Button
+            tone={view === 'list' ? 'primary' : 'neutral'}
             onClick={() => setView('list')}
-            style={{
-              ...btnStyle,
-              backgroundColor: view === 'list' ? '#0070f3' : '#eee',
-              color: view === 'list' ? '#e4e5e9' : '#333',
-            }}
+            style={btnStyle}
           >
             List
-          </button>
+          </Button>
         </Flex>
       </Flex>
 
       {/* Month view */}
       {view === 'month' && (
         <>
-          <Grid
-            marginBottom={1}
-            style={{
-              gridTemplateColumns: 'repeat(7, 1fr)',
-            }}
-          >
+          <Grid columns={7} marginBottom={1}>
             {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => (
-              <Box
+              <Text
                 key={d}
-                paddingX={4}
-                paddingY={1}
+                align="center"
+                weight="semibold"
+                size={1}
+                muted
                 style={{
-                  textAlign: 'center',
-                  fontWeight: 600,
-                  color: '#888',
-                  fontSize: 12,
+                  padding: '8px 0',
                 }}
               >
                 {d}
-              </Box>
+              </Text>
             ))}
           </Grid>
-          <Grid gap={1} style={{gridTemplateColumns: 'repeat(7, 1fr)'}}>
+          <Grid gap={1} columns={7}>
             {Array.from({length: (new Date(currentYear, currentMonth, 1).getDay() + 6) % 7}).map(
               (_, i) => (
                 <Box key={`empty-${i}`} />
@@ -184,7 +174,8 @@ export function ScheduleCalendarInput(props: ObjectInputProps) {
                   currentYear === today.getFullYear()
 
                 return (
-                  <Box
+                  <Card
+                    as="button"
                     key={day}
                     onClick={() =>
                       ((date: string) => {
@@ -206,52 +197,54 @@ export function ScheduleCalendarInput(props: ObjectInputProps) {
                       )
                     }
                     padding={1}
+                    radius={2}
+                    tone="primary"
                     style={{
                       minHeight: 70,
-                      border: isToday ? '2px solid #0070f3' : '1px solid #e0e0e0',
-                      borderRadius: 6,
+                      border: isToday ? '2px solid var(--card-focus-ring-color)' : undefined,
                       cursor: 'pointer',
-                      backgroundColor: '#191a24',
-                      transition: 'background 0.15s',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'flex-start',
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#21232F')}
-                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#191A24')}
                   >
-                    <Box
+                    <Text
+                      size={1}
+                      weight={isToday ? 'semibold' : 'regular'}
                       style={{
-                        fontWeight: isToday ? 700 : 400,
-                        color: isToday ? '#0070f3' : '#e4e5e9',
-                        fontSize: 13,
+                        color: isToday ? 'var(--card-focus-ring-color)' : undefined,
                       }}
                     >
                       {day}
-                    </Box>
+                    </Text>
                     {(eventsByDay[day] || []).map((ev) => (
-                      <Box
+                      <Text
                         key={ev._key}
                         onClick={(e) => {
                           e.stopPropagation()
                           openEdit(ev)
                         }}
-                        paddingX={1}
-                        paddingY={2}
-                        marginTop={2}
-                        overflow="hidden"
+                        textOverflow="ellipsis"
+                        size={0}
                         style={{
-                          backgroundColor: '#0070f3',
-                          color: '#e4e5e9',
+                          display: 'flex',
+                          backgroundColor: 'var(--card-focus-ring-color)',
+                          color: '#fff',
                           borderRadius: 3,
-                          fontSize: 11,
                           whiteSpace: 'nowrap',
-                          textOverflow: 'ellipsis',
                           cursor: 'pointer',
+                          width: '75%',
+                          height: 16,
+                          margin: '6px auto',
+                          padding: '6px',
+                          overflow: 'hidden',
                         }}
                       >
                         {ev.time && `${ev.time} `}
                         {ev.titleFR || ev.titleEN}
-                      </Box>
+                      </Text>
                     ))}
-                  </Box>
+                  </Card>
                 )
               },
             )}
@@ -262,56 +255,57 @@ export function ScheduleCalendarInput(props: ObjectInputProps) {
       {/* List view */}
       {view === 'list' && (
         <Flex direction="column" gap={2}>
-          {sortedEvents.length === 0 && <Text color="#888">No events.</Text>}
-          {sortedEvents.map((ev) => (
-            <Flex
-              key={ev._key}
-              onClick={() => openEdit(ev)}
-              align="center"
-              style={{
-                gap: 12,
-                padding: '10px 14px',
-                border: '1px solid #e0e0e0',
-                borderRadius: 8,
-                cursor: 'pointer',
-                background: '#191a24',
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = '#21232F')}
-              onMouseLeave={(e) => (e.currentTarget.style.background = '#191A24')}
-            >
-              <Flex
-                paddingX={2}
-                paddingTop={2}
-                paddingBottom={3}
-                direction="column"
-                gap={1}
+          {sortedEvents.length === 0 ? (
+            <Text>No events.</Text>
+          ) : (
+            sortedEvents.map((ev) => (
+              <Card
+                as="button"
+                key={ev._key}
+                onClick={() => openEdit(ev)}
+                tone="primary"
                 style={{
-                  minWidth: 52,
-                  textAlign: 'center',
-                  background: '#0070f3',
-                  color: '#e4e5e9',
-                  borderRadius: 6,
-                  fontSize: 13,
-                  fontWeight: 600,
+                  display: 'flex',
+                  gap: 12,
+                  alignItems: 'center',
+                  padding: '10px 14px',
+                  border: '1px solid var(--card-border-color)',
+                  borderRadius: 8,
+                  cursor: 'pointer',
                 }}
               >
-                {new Date(ev.date).getDate()}
-                <br />
-                <Text style={{fontSize: 10, fontWeight: 400}}>
-                  {MONTHS[new Date(ev.date).getMonth()].slice(0, 3)}
-                </Text>
-              </Flex>
-              <Flex flex={1} direction="column" gap={2}>
-                <Text weight="semibold" style={{color: '#e4e5e9'}}>
-                  {ev.titleFR} / {ev.titleEN}
-                </Text>
-                <Text style={{color: '#979cb0', fontSize: 12}}>
-                  {ev.time && `${ev.time}`}
-                  {ev.location && ` — ${ev.location}`}
-                </Text>
-              </Flex>
-            </Flex>
-          ))}
+                <Flex
+                  paddingX={2}
+                  paddingTop={2}
+                  paddingBottom={3}
+                  direction="column"
+                  align="center"
+                  size={1}
+                  gap={2}
+                  style={{
+                    minWidth: 52,
+                    background: '#0070f3',
+                    color: '#ffffff',
+                    borderRadius: 6,
+                  }}
+                >
+                  <Text style={{color: '#ffffff'}}>{new Date(ev.date).getDate()}</Text>
+                  <Text style={{fontSize: 10, fontWeight: 400, color: '#ffffff'}}>
+                    {MONTHS[new Date(ev.date).getMonth()].slice(0, 3)}
+                  </Text>
+                </Flex>
+                <Flex direction="column" gap={2}>
+                  <Text weight="semibold">
+                    {ev.titleFR} / {ev.titleEN}
+                  </Text>
+                  <Text size={1} muted>
+                    {ev.time && `${ev.time}`}
+                    {ev.location && ` — ${ev.location}`}
+                  </Text>
+                </Flex>
+              </Card>
+            ))
+          )}
         </Flex>
       )}
 
@@ -324,94 +318,79 @@ export function ScheduleCalendarInput(props: ObjectInputProps) {
             position: 'fixed',
             inset: 0,
             background: 'rgba(0,0,0,0.4)',
-            zIndex: 9999,
+            zIndex: 99999,
           }}
         >
-          <Box
-            padding={5}
-            style={{
-              background: '#13141b',
-              border: '1px solid #2a2d3f',
-              borderRadius: 12,
-              width: 420,
-              maxWidth: '95vw',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
-            }}
-          >
+          <Card padding={5} radius={3} shadow={3} style={{width: 420, maxWidth: '95vw'}}>
             <Heading size={1} style={{marginBottom: 16}}>
               {modal.mode === 'add' ? 'New Event' : 'Modify Event'}
             </Heading>
-            <Flex style={{display: 'flex', flexDirection: 'column', gap: 10}}>
-              <input
+            <Flex direction="column" style={{gap: 10}}>
+              <TextInput
                 placeholder="Title (FR) *"
                 value={modal.form.titleFR}
                 onChange={(e) =>
                   setModal({...modal, form: {...modal.form, titleFR: e.target.value}})
                 }
-                style={{...inputStyle, color: '#e4e5e9'}}
               />
-              <input
+              <TextInput
                 placeholder="Title (EN)"
                 value={modal.form.titleEN}
                 onChange={(e) =>
                   setModal({...modal, form: {...modal.form, titleEN: e.target.value}})
                 }
-                style={{...inputStyle, color: '#e4e5e9'}}
               />
               <Flex gap={2}>
-                <input
+                <TextInput
                   type="date"
                   value={modal.form.date}
                   onChange={(e) =>
                     setModal({...modal, form: {...modal.form, date: e.target.value}})
                   }
-                  style={{...inputStyle, color: '#e4e5e9', flex: 1}}
                 />
-                <input
+                <TextInput
                   type="time"
                   value={modal.form.time}
                   onChange={(e) =>
                     setModal({...modal, form: {...modal.form, time: e.target.value}})
                   }
-                  style={{...inputStyle, color: '#e4e5e9', flex: 1}}
                 />
               </Flex>
-              <input
-                placeholder="Lieu"
+              <TextInput
+                placeholder="Location"
                 value={modal.form.location}
                 onChange={(e) =>
                   setModal({...modal, form: {...modal.form, location: e.target.value}})
                 }
-                style={{...inputStyle, color: '#e4e5e9'}}
               />
             </Flex>
             <Flex gap={2} justify="flex-end" style={{marginTop: 20}}>
               {modal.mode === 'edit' && (
-                <button
+                <Button
+                  tone="critical"
                   onClick={() =>
                     modal.key &&
-                    ((key: string) => {
-                      saveEvents(events.filter((e) => e._key !== key))
+                    (() => {
+                      saveEvents(events.filter((e) => e._key !== modal.key))
                       setModal(null)
-                    })(modal.key)
+                    })()
                   }
-                  style={{...btnStyle, background: '#fee2e2', color: '#dc2626'}}
                 >
                   Supprimer
-                </button>
+                </Button>
               )}
-              <button
+              <Button
+                tone="neutral"
                 onClick={() => setModal(null)}
-                style={{...btnStyle, background: '#eee', color: '#333'}}
               >
                 Annuler
-              </button>
-              <button
+              </Button>
+              <Button
+                tone="positive"
                 onClick={() => {
                   if (!modal) return
                   const {form, mode, key} = modal
                   if (!form.titleFR || !form.date) return
-
                   if (mode === 'add') {
                     saveEvents([...events, {...form, _key: Math.random().toString(36).slice(2, 9)}])
                   } else {
@@ -420,38 +399,19 @@ export function ScheduleCalendarInput(props: ObjectInputProps) {
                   setModal(null)
                 }}
                 disabled={!modal.form.titleFR || !modal.form.date}
-                style={{
-                  ...btnStyle,
-                  background: '#0070f3',
-                  color: '#e4e5e9',
-                  opacity: !modal.form.titleFR || !modal.form.date ? 0.5 : 1,
-                }}
               >
                 Sauvegarder
-              </button>
+              </Button>
             </Flex>
-          </Box>
+          </Card>
         </Flex>
       )}
-    </Box>
+    </Card>
   )
 }
 
 const btnStyle: React.CSSProperties = {
-  padding: '6px 12px',
+  height: 28,
   borderRadius: 6,
-  border: 'none',
   cursor: 'pointer',
-  fontWeight: 500,
-  fontSize: 13,
-}
-
-const inputStyle: React.CSSProperties = {
-  padding: '8px 10px',
-  borderRadius: 6,
-  border: '1px solid #ddd',
-  fontSize: 14,
-  width: '100%',
-  boxSizing: 'border-box',
-  backgroundColor: 'inherit',
 }
