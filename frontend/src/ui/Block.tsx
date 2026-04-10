@@ -12,11 +12,24 @@ import type {
   IGroup,
   IEnsembles,
   IImg,
+  ISchedule,
+  IButton,
 } from '../hooks/usePages'
 import {Ensembles} from './Ensembles'
 import {Image} from './Image'
+import {Schedule} from './Schedule'
+import {Button} from './Button'
 
-export type TBlock = IGroup | ITitle | IParagraph | IImg | ICardMenu | ISocialLinks | IEnsembles
+export type TBlock =
+  | IGroup
+  | ITitle
+  | IParagraph
+  | IImg
+  | IButton
+  | ICardMenu
+  | ISocialLinks
+  | IEnsembles
+  | ISchedule
 
 export function Block({block}: {block: TBlock}) {
   const {i18n} = useTranslation()
@@ -63,6 +76,8 @@ export function Block({block}: {block: TBlock}) {
         height={block.dimensionType === 'height' ? block.dimension : undefined}
       />
     )
+  else if (block._type === 'button')
+    return <Button key={block._key} text={block.text} link={block.link} />
   else if (block._type === 'cardMenu')
     return (
       <CardMenu
@@ -85,6 +100,6 @@ export function Block({block}: {block: TBlock}) {
       />
     )
   else if (block._type === 'ensembles') return <Ensembles key={block._key} />
-
+  else if (block._type === 'schedule') return <Schedule key={block._key} />
   return null
 }

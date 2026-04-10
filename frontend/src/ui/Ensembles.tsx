@@ -11,7 +11,7 @@ export function Ensembles() {
   if (!settings?.ensembles?.length) return null
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 -mx-12">
+    <section className="grid grid-cols-1 sm:grid-cols-2 gap-8 -mx-12">
       {settings.ensembles.map((ensemble) => (
         <Link
           key={ensemble.slug.current}
@@ -35,6 +35,6 @@ export function Ensembles() {
           )}
         </Link>
       ))}
-    </div>
+    </section>
   )
 }

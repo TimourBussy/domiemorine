@@ -2,23 +2,23 @@ import {useCallback} from 'react'
 import {set, unset} from 'sanity'
 import type {ObjectInputProps} from 'sanity'
 import {useState} from 'react'
-import {Text, Flex, Box, Grid, Heading, Card, Button, TextInput} from '@sanity/ui'
+import {Text, Flex, Box, Grid, Heading, Card, Button, TextInput, TextArea} from '@sanity/ui'
 
 interface ScheduleEvent {
   _key: string
-  titleFR: string
-  titleEN: string
+  title: {FR: string; EN: string}
   date: string
   time: string
   location: string
+  link?: string
 }
 
 interface EventFormState {
-  titleFR: string
-  titleEN: string
+  title: {FR: string; EN: string}
   date: string
   time: string
   location: string
+  link?: string
 }
 
 const MONTHS = [
@@ -39,7 +39,10 @@ const MONTHS = [
 export function ScheduleCalendarInput(props: ObjectInputProps) {
   const {value, onChange} = props
 
-  const events: ScheduleEvent[] = (value as any)?.events || []
+  const events: ScheduleEvent[] = ((value as any)?.events || []).map((e: any) => ({
+    ...e,
+    title: e.title ?? {FR: e.titleFR ?? '', EN: e.titleEN ?? ''},
+  }))
 
   const today = new Date()
   const [currentYear, setCurrentYear] = useState(today.getFullYear())
@@ -63,11 +66,11 @@ export function ScheduleCalendarInput(props: ObjectInputProps) {
       mode: 'edit',
       key: event._key,
       form: {
-        titleFR: event.titleFR,
-        titleEN: event.titleEN,
+        title: event.title,
         date: event.date,
         time: event.time,
         location: event.location,
+        link: event.link,
       },
     })
   }
@@ -151,9 +154,7 @@ export function ScheduleCalendarInput(props: ObjectInputProps) {
                 weight="semibold"
                 size={1}
                 muted
-                style={{
-                  padding: '8px 0',
-                }}
+                style={{padding: '8px 0'}}
               >
                 {d}
               </Text>
@@ -177,30 +178,29 @@ export function ScheduleCalendarInput(props: ObjectInputProps) {
                   <Card
                     as="button"
                     key={day}
-                    onClick={() =>
-                      ((date: string) => {
+                    onClick={() => {
+                      const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+                      const existingEvent = eventsByDay[day]?.[0]
+                      if (existingEvent) {
+                        openEdit(existingEvent)
+                      } else {
                         setModal({
                           mode: 'add',
                           form: {
-                            ...{
-                              titleFR: '',
-                              titleEN: '',
-                              date: '',
-                              time: '',
-                              location: '',
-                            },
-                            date,
+                            title: {FR: '', EN: ''},
+                            date: dateStr,
+                            time: '',
+                            location: '',
+                            link: '',
                           },
                         })
-                      })(
-                        `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
-                      )
-                    }
+                      }
+                    }}
                     padding={1}
                     radius={2}
                     tone="primary"
                     style={{
-                      minHeight: 70,
+                      minHeight: 80,
                       border: isToday ? '2px solid var(--card-focus-ring-color)' : undefined,
                       cursor: 'pointer',
                       display: 'flex',
@@ -220,10 +220,6 @@ export function ScheduleCalendarInput(props: ObjectInputProps) {
                     {(eventsByDay[day] || []).map((ev) => (
                       <Text
                         key={ev._key}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          openEdit(ev)
-                        }}
                         textOverflow="ellipsis"
                         size={0}
                         style={{
@@ -241,7 +237,7 @@ export function ScheduleCalendarInput(props: ObjectInputProps) {
                         }}
                       >
                         {ev.time && `${ev.time} `}
-                        {ev.titleFR || ev.titleEN}
+                        {ev.title.FR} / {ev.title.EN}
                       </Text>
                     ))}
                   </Card>
@@ -280,11 +276,10 @@ export function ScheduleCalendarInput(props: ObjectInputProps) {
                   paddingBottom={3}
                   direction="column"
                   align="center"
-                  size={1}
                   gap={2}
                   style={{
                     minWidth: 52,
-                    background: '#0070f3',
+                    background: 'var(--card-focus-ring-color)',
                     color: '#ffffff',
                     borderRadius: 6,
                   }}
@@ -296,7 +291,7 @@ export function ScheduleCalendarInput(props: ObjectInputProps) {
                 </Flex>
                 <Flex direction="column" gap={2}>
                   <Text weight="semibold">
-                    {ev.titleFR} / {ev.titleEN}
+                    {ev.title.FR} / {ev.title.EN}
                   </Text>
                   <Text size={1} muted>
                     {ev.time && `${ev.time}`}
@@ -328,16 +323,22 @@ export function ScheduleCalendarInput(props: ObjectInputProps) {
             <Flex direction="column" style={{gap: 10}}>
               <TextInput
                 placeholder="Title (FR) *"
-                value={modal.form.titleFR}
+                value={modal.form.title.FR}
                 onChange={(e) =>
-                  setModal({...modal, form: {...modal.form, titleFR: e.target.value}})
+                  setModal({
+                    ...modal,
+                    form: {...modal.form, title: {...modal.form.title, FR: e.target.value}},
+                  })
                 }
               />
               <TextInput
-                placeholder="Title (EN)"
-                value={modal.form.titleEN}
+                placeholder="Title (EN) *"
+                value={modal.form.title.EN}
                 onChange={(e) =>
-                  setModal({...modal, form: {...modal.form, titleEN: e.target.value}})
+                  setModal({
+                    ...modal,
+                    form: {...modal.form, title: {...modal.form.title, EN: e.target.value}},
+                  })
                 }
               />
               <Flex gap={2}>
@@ -363,6 +364,11 @@ export function ScheduleCalendarInput(props: ObjectInputProps) {
                   setModal({...modal, form: {...modal.form, location: e.target.value}})
                 }
               />
+              <TextInput
+                placeholder="Link"
+                value={modal.form.link}
+                onChange={(e) => setModal({...modal, form: {...modal.form, link: e.target.value}})}
+              />
             </Flex>
             <Flex gap={2} justify="flex-end" style={{marginTop: 20}}>
               {modal.mode === 'edit' && (
@@ -379,10 +385,7 @@ export function ScheduleCalendarInput(props: ObjectInputProps) {
                   Supprimer
                 </Button>
               )}
-              <Button
-                tone="neutral"
-                onClick={() => setModal(null)}
-              >
+              <Button tone="neutral" onClick={() => setModal(null)}>
                 Annuler
               </Button>
               <Button
@@ -390,7 +393,7 @@ export function ScheduleCalendarInput(props: ObjectInputProps) {
                 onClick={() => {
                   if (!modal) return
                   const {form, mode, key} = modal
-                  if (!form.titleFR || !form.date) return
+                  if (!form.title.FR || !form.title.EN || !form.date) return
                   if (mode === 'add') {
                     saveEvents([...events, {...form, _key: Math.random().toString(36).slice(2, 9)}])
                   } else {
@@ -398,7 +401,7 @@ export function ScheduleCalendarInput(props: ObjectInputProps) {
                   }
                   setModal(null)
                 }}
-                disabled={!modal.form.titleFR || !modal.form.date}
+                disabled={!modal.form.title.FR || !modal.form.title.EN || !modal.form.date}
               >
                 Sauvegarder
               </Button>

@@ -1,7 +1,6 @@
 import {defineField, defineType} from 'sanity'
-import {MARGIN_CLASSES} from '../../frontend/src/ui/Group'
-
-const MARGIN_VALUES = [4, 8, 12, 16, 20, 24]
+import {spacingFields} from './spacing'
+import {BLOCKS} from './blocks'
 
 export default defineType({
   name: 'group',
@@ -12,40 +11,9 @@ export default defineType({
       name: 'blocks',
       title: 'Blocks',
       type: 'array',
-      of: [{type: 'title'}, {type: 'paragraph'}, {type: 'cardMenu'}, {type: 'socialLinks'}],
+      of: BLOCKS,
     }),
-    defineField({
-      name: 'marginTop',
-      title: 'Margin Top',
-      type: 'number',
-      options: {
-        list: MARGIN_VALUES,
-      },
-    }),
-    defineField({
-      name: 'marginRight',
-      title: 'Margin Right',
-      type: 'number',
-      options: {
-        list: MARGIN_VALUES,
-      },
-    }),
-    defineField({
-      name: 'marginBottom',
-      title: 'Margin Bottom',
-      type: 'number',
-      options: {
-        list: MARGIN_VALUES,
-      },
-    }),
-    defineField({
-      name: 'marginLeft',
-      title: 'Margin Left',
-      type: 'number',
-      options: {
-        list: MARGIN_VALUES,
-      },
-    }),
+    ...spacingFields,
   ],
   preview: {
     select: {

@@ -1,4 +1,5 @@
 import {defineField, defineType} from 'sanity'
+import {BLOCKS} from './blocks'
 
 export default defineType({
   name: 'page',
@@ -55,15 +56,7 @@ export default defineType({
     defineField({
       name: 'body',
       type: 'array',
-      of: [
-        {type: 'group'},
-        {type: 'title'},
-        {type: 'paragraph'},
-        {type: 'img'},
-        {type: 'cardMenu'},
-        {type: 'socialLinks'},
-        {type: 'ensembles'},
-      ],
+      of: BLOCKS,
     }),
   ],
   preview: {

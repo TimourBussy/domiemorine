@@ -1,14 +1,14 @@
 import {defineType, defineField} from 'sanity'
-import { spacingFields } from './spacing'
+import {spacingFields} from './spacing'
 
 export default defineType({
-  name: 'ensembles',
-  title: 'Ensembles',
+  name: 'schedule',
+  title: 'Schedule',
   type: 'object',
   fields: spacingFields,
   preview: {
     prepare() {
-      return {title: 'Ensembles'}
+      return {title: 'Schedule'}
     },
   },
 })

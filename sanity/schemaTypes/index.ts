@@ -7,6 +7,8 @@ import socialLinks from './socialLinks'
 import settings from './settings'
 import ensembles from './ensembles'
 import image from './image'
+import schedule from './schedule'
+import button from './button'
 
 export const schemaTypes = [
   page,
@@ -18,4 +20,6 @@ export const schemaTypes = [
   settings,
   ensembles,
   image,
+  schedule,
+  button,
 ]

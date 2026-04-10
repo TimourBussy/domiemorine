@@ -21,57 +21,74 @@ export interface IEnsemble {
   socialMedias?: ISocialMediaItem[]
 }
 
+export interface ISchedule {
+  _type: 'schedule'
+  _key: string
+}
+
+export interface IEvent {
+  title: {FR: string; EN: string}
+  date: string
+  time?: string
+  location?: string
+  link?: string
+}
+
 export interface ISettings {
   _id: string
   socialMedias: ISocialMediaItem[]
   navigationMenu?: IMenuItem[]
   ensembles: IEnsemble[]
+  schedule?: {events: IEvent[]}
 }
 
-export interface IGroup {
-  _type: 'group'
-  _key: string
-  blocks: (ITitle | IParagraph | ICardMenu | ISocialLinks | IEnsembles)[]
+export interface IMargins {
   marginTop?: number
   marginRight?: number
   marginBottom?: number
   marginLeft?: number
 }
 
-export interface ITitle {
+export interface IGroup extends IMargins {
+  _type: 'group'
+  _key: string
+  blocks: (ITitle | IParagraph | ICardMenu | ISocialLinks | IEnsembles | ISchedule)[]
+}
+
+export interface ITitle extends IMargins {
   _type: 'title'
   _key: string
   content: {FR: string; EN: string}
   level: 3 | 4 | 5 | 6
   colored: boolean
-  marginTop?: number
-  marginRight?: number
-  marginBottom?: number
-  marginLeft?: number
 }
 
-export interface IParagraph {
+export interface IParagraph extends IMargins {
   _type: 'paragraph'
   _key: string
   content: {FR: string; EN: string}
   size: 'small' | 'large'
-  marginTop?: number
-  marginRight?: number
-  marginBottom?: number
-  marginLeft?: number
 }
 
-export interface IImg {
+export interface IImg extends IMargins {
   _type: 'img'
   _key: string
   src: {asset: {url: string}}
   alt?: {FR?: string; EN?: string}
   dimensionType?: 'width' | 'height'
   dimension?: number
-  marginTop?: number
-  marginRight?: number
-  marginBottom?: number
-  marginLeft?: number
+}
+
+export interface IButton extends IMargins {
+  _type: 'button'
+  _key: string
+  text: {FR: string; EN: string}
+  link: {
+    slug: {
+      FR: {current: string}
+      EN: {current: string}
+    }
+  }
 }
 
 export interface ICardMenuItem {
@@ -85,25 +102,17 @@ export interface ICardMenuItem {
   }
 }
 
-export interface ICardMenu {
+export interface ICardMenu extends IMargins {
   _type: 'cardMenu'
   _key: string
   cards: ICardMenuItem[]
-  marginTop?: number
-  marginRight?: number
-  marginBottom?: number
-  marginLeft?: number
 }
 
-export interface ISocialLinks {
+export interface ISocialLinks extends IMargins {
   _type: 'socialLinks'
   _key: string
   size: 'small' | 'medium' | 'large'
   colored: boolean
-  marginTop?: number
-  marginRight?: number
-  marginBottom?: number
-  marginLeft?: number
 }
 
 export interface Page {
@@ -119,7 +128,7 @@ export interface Page {
     altFr?: string
     altEn?: string
   }
-  body?: (IGroup | ITitle | IParagraph | ICardMenu | ISocialLinks | IEnsembles | IImg)[]
+  body?: (IGroup | ITitle | IParagraph | IImg | ICardMenu | ISocialLinks | IEnsembles | ISchedule)[]
 }
 
 export interface IMenuSubItem {
@@ -154,33 +163,43 @@ export function usePages() {
   return pages
 }
 
+const MARGINS = 'marginTop, marginRight, marginBottom, marginLeft'
+
 const BLOCK_QUERY = `
   _type, _key,
   _type == "title" => {
     content, level, colored,
-    marginTop, marginRight, marginBottom, marginLeft
+    ${MARGINS}
   },
   _type == "paragraph" => {
     content, size,
-    marginTop, marginRight, marginBottom, marginLeft
+    ${MARGINS}
   },
   _type == "img" => {
     src{ asset->{ url } }, alt,
     dimensionType, dimension,
-    marginTop, marginRight, marginBottom, marginLeft
+    ${MARGINS}
+  },
+  _type == "button" => {
+    text,
+    link->{ slug { FR, EN } },
+    ${MARGINS}
   },
   _type == "cardMenu" => {
     cards[]{
       title, description,
       destinationPage->{ slug { FR, EN } }
     },
-    marginTop, marginRight, marginBottom, marginLeft
+    ${MARGINS}
   },
   _type == "socialLinks" => {
     size, colored,
-    marginTop, marginRight, marginBottom, marginLeft
+    ${MARGINS}
   },
   _type == "ensembles" => {
+    _type, _key
+  },
+  _type == "schedule" => {
     _type, _key
   }
 `
@@ -203,7 +222,7 @@ export function usePage(slug: string) {
           body[]{
             ${BLOCK_QUERY},
             _type == "group" => {
-              marginTop, marginRight, marginBottom, marginLeft,
+              ${MARGINS},
               blocks[]{
                 ${BLOCK_QUERY}
               }
@@ -239,7 +258,16 @@ export function useSettings() {
             previewDesc,
             desc,
             socialMedias[]{name, icon, url}
-          }
+          },
+          schedule{
+            events[]{
+              title,
+              time,
+              date,
+              location,
+              link
+            }
+          },
         }`,
       )
       .then(setSettings)
